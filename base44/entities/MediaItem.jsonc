@@ -1,0 +1,62 @@
+{
+  "name": "MediaItem",
+  "type": "object",
+  "description": "The intro video, CV file, drawing sheet section cover, project cover photos, project videos and project drawing files shown on the portfolio, managed from the dashboard.",
+  "properties": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "intro_video",
+        "drawing",
+        "drawing_cover",
+        "project_cover",
+        "project_video",
+        "cv"
+      ],
+      "default": "drawing",
+      "description": "What this file is used for"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Project slug this file belongs to (project covers and videos)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Name shown for the file"
+    },
+    "note": {
+      "type": "string",
+      "description": "Optional one-line description"
+    },
+    "url": {
+      "type": "string",
+      "description": "Public file URL or external video link"
+    },
+    "order": {
+      "type": "number",
+      "description": "Sort position"
+    }
+  },
+  "required": [
+    "kind",
+    "url"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

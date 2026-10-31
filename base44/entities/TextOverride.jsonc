@@ -1,0 +1,47 @@
+{
+  "name": "TextOverride",
+  "type": "object",
+  "description": "Section-by-section text overrides for the portfolio, keyed by content path and language. Empty means the built-in default is used.",
+  "properties": {
+    "path": {
+      "type": "string",
+      "description": "Dot path into the content object, e.g. hero.lead or projects.items.0.title"
+    },
+    "lang": {
+      "type": "string",
+      "enum": [
+        "en",
+        "ar"
+      ],
+      "default": "en",
+      "description": "Language this override belongs to"
+    },
+    "value": {
+      "type": "string",
+      "description": "The replacement text"
+    }
+  },
+  "required": [
+    "path",
+    "lang",
+    "value"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

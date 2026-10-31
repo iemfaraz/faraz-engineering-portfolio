@@ -1,0 +1,51 @@
+{
+  "name": "CvVersion",
+  "type": "object",
+  "description": "The Arabic version of the CV, written automatically from the English PDF uploaded in the dashboard and used for the Arabic download.",
+  "properties": {
+    "lang": {
+      "type": "string",
+      "default": "ar",
+      "description": "Language of this version"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "The English PDF this version was written from"
+    },
+    "source_title": {
+      "type": "string",
+      "description": "File name of the English PDF"
+    },
+    "content": {
+      "type": "string",
+      "description": "JSON: name, title, contact and sections of the Arabic CV"
+    },
+    "translated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the Arabic version was generated"
+    }
+  },
+  "required": [
+    "lang",
+    "content"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

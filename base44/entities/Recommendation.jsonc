@@ -1,0 +1,64 @@
+{
+  "name": "Recommendation",
+  "type": "object",
+  "description": "Endorsements submitted by engineers, consultants, contractors and clients. Published only after review.",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the person writing the recommendation"
+    },
+    "job_title": {
+      "type": "string",
+      "description": "Their job title"
+    },
+    "company": {
+      "type": "string",
+      "description": "Their company"
+    },
+    "relation": {
+      "type": "string",
+      "description": "How they worked with Faraz"
+    },
+    "message": {
+      "type": "string",
+      "description": "The recommendation text"
+    },
+    "status": {
+      "type": "string",
+      "description": "Review state \u2014 only approved recommendations are published",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    }
+  },
+  "required": [
+    "name",
+    "message",
+    "status"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

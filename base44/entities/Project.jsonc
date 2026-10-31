@@ -1,0 +1,98 @@
+{
+  "name": "Project",
+  "type": "object",
+  "description": "Portfolio projects added from the dashboard. They appear after the built-in projects on the site, with their own page, cover and video.",
+  "properties": {
+    "slug": {
+      "type": "string",
+      "description": "URL id of the project page, e.g. padel-lighting"
+    },
+    "order": {
+      "type": "number",
+      "description": "Sort position, lower first"
+    },
+    "cat": {
+      "type": "string",
+      "enum": [
+        "gov",
+        "res",
+        "ind",
+        "elv",
+        "light"
+      ],
+      "default": "gov",
+      "description": "Project category"
+    },
+    "title_en": {
+      "type": "string",
+      "description": "Project name in English"
+    },
+    "title_ar": {
+      "type": "string",
+      "description": "Project name in Arabic (English is used when empty)"
+    },
+    "summary_en": {
+      "type": "string",
+      "description": "One or two lines describing the work, in English"
+    },
+    "summary_ar": {
+      "type": "string",
+      "description": "Summary in Arabic (English is used when empty)"
+    },
+    "tags": {
+      "type": "string",
+      "description": "Comma separated tags, e.g. Power, Lighting, ELV"
+    },
+    "engagement": {
+      "type": "string",
+      "description": "Employer or consultancy and city"
+    },
+    "office": {
+      "type": "string",
+      "description": "Mode of work, e.g. Design office or Site team"
+    },
+    "period": {
+      "type": "string",
+      "description": "Years, e.g. 2025 \u2014 2026"
+    },
+    "disciplines": {
+      "type": "string",
+      "description": "Comma separated disciplines"
+    },
+    "standards": {
+      "type": "string",
+      "description": "Comma separated standards, e.g. SBC, IEC"
+    },
+    "scope_en": {
+      "type": "string",
+      "description": "Scope delivered in English, one item per line"
+    },
+    "scope_ar": {
+      "type": "string",
+      "description": "Scope delivered in Arabic, one item per line (English is used when empty)"
+    }
+  },
+  "required": [
+    "slug",
+    "cat",
+    "title_en"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
