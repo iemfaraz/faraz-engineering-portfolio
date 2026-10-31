@@ -372,6 +372,14 @@
       "id": "0e5a3dc2-063a-4eee-b86b-535aae957f69",
       "entity": "TextOverride",
       "created_date": "2026-10-31T21:52:42.909Z"
+    },
+    {
+      "id": "b37a3cde-3c7a-5c20-ad9d-f1537c8562c2",
+      "entity": "TextOverride",
+      "created_date": "2026-10-31T21:53:50.206060+00:00",
+      "lang": "ar",
+      "path": "stats.0.value",
+      "value": "10"
     }
   ],
   "files": [
@@ -537,12 +545,12 @@
     }
   ],
   "translation": {
-    "status": "queued",
+    "status": "complete",
     "engine": "Argos Translate en-ar (local neural model)",
     "cv_source_url": "https://iemfaraz.github.io/faraz-engineering-portfolio/uploads/76a9d33f-1143-4c6e-adb7-f18edf69bd91.pdf",
     "cv_media_id": "ba0bf72e-b5c4-5fda-ac69-0073caec951e",
     "cv_version_id": "0f1dbe61-6c50-5739-a346-fcfa06e1daac",
-    "updated_at": "2026-10-31T20:32:11.639747+00:00",
+    "updated_at": "2026-10-31T21:53:50.206060+00:00",
     "requested_at": "2026-10-31T21:52:42.909Z"
   },
   "localization": {

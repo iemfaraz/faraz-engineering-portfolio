@@ -629,7 +629,8 @@
     "default:detail.ctaTitle": "8c98a484977a26f905088e0ff02274f24a52a0a7c95b5f508f4eda8fc70036cc",
     "default:detail.ctaBody": "badf91a6e0632146421d7d645a4c8684504915e2321efa7dcf36483c50b4c638",
     "display:MediaItem:b232fe9a-a22c-4906-95f0-52f0328ec87b:title": "647bbedcdaf592291b56cdd5cf3106018896b2d985bb70ef5790ebecab103788",
-    "display:MediaItem:b232fe9a-a22c-4906-95f0-52f0328ec87b:note": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126"
+    "display:MediaItem:b232fe9a-a22c-4906-95f0-52f0328ec87b:note": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126",
+    "text:stats.0.value": "536549599ec6c3b859cd3970025779a13d061783c73e663fea7f963e98379aa8"
   },
   "cv": {
     "hash": "095d9eb3551cd342b8d7bfad58f918bec60fb8bbc404cf67d66b5e3d775e4802",
