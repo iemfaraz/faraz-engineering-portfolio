@@ -1,0 +1,42 @@
+name: Prepare AI portfolio change preview
+on:
+  push:
+    branches: [main]
+    paths: ['ai/requests/*.json', 'pages-site/assistant/**', '.github/workflows/assistant.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  propose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pages-site/assistant/requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/portfolio-ai
+          key: portfolio-assistant-qwen7b-q4-bb5d59e0-v1
+      - run: python -m pip install -r pages-site/assistant/requirements.txt
+      - run: python -m unittest discover -s pages-site/assistant -p test_worker.py
+      - name: Prepare preview with local AI
+        run: python pages-site/assistant/worker.py
+      - name: Commit proposals only
+        run: |
+          if [ -d ai/proposals ]; then git add ai/proposals; fi
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Prepare AI portfolio change preview for review'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then exit 0; fi
+            done
+            exit 1
+          fi

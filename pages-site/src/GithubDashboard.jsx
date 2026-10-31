@@ -10,10 +10,11 @@ import ProjectVideosManager from '@/components/admin/ProjectVideosManager';
 import DrawingsManager from '@/components/admin/DrawingsManager';
 import CvManager from './GithubCvManager';
 import GithubTranslation from './GithubTranslation';
+import GithubAssistant from './GithubAssistant';
 import SectionEditor from '@/components/admin/SectionEditor';
 import GithubFiles from './GithubFiles';
 import GithubRecommendations from './GithubRecommendations';
-const TABS=[['intro','Intro video',VideoManager],['projects','Projects',ProjectsManager],['covers','Project covers',ProjectCoversManager],['videos','Project videos',ProjectVideosManager],['drawings','Drawings',DrawingsManager],['cv','CV & profile photo',CvManager],['sections','Section details',SectionEditor],['translation','AI translation',GithubTranslation],['files','Project files',GithubFiles],['recommendations','Recommendations',GithubRecommendations]];
+const TABS=[['assistant','AI assistant',GithubAssistant],['intro','Intro video',VideoManager],['projects','Projects',ProjectsManager],['covers','Project covers',ProjectCoversManager],['videos','Project videos',ProjectVideosManager],['drawings','Drawings',DrawingsManager],['cv','CV & profile photo',CvManager],['sections','Section details',SectionEditor],['translation','AI translation',GithubTranslation],['files','Project files',GithubFiles],['recommendations','Recommendations',GithubRecommendations]];
 export default function GithubDashboard(){
  const {snapshot}=useLiveContent();
  const [session,setSession]=useState(githubSession()),[token,setToken]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(''),[tab,setTab]=useState('intro'),[commit,setCommit]=useState('');

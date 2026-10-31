@@ -1,5 +1,6 @@
 import {REPOSITORY,PUBLIC_ORIGIN,validateSnapshot,applyOperations,displaySnapshot,uploadType} from './github/model.js';
 import {githubError} from './github/errors.js';
+import {assertContextCurrent,planOperations,validateContext,REQUEST_ID} from './assistant-plan.js';
 let accessToken='';let account='';let queued=[];let scheduled=false;let tail=Promise.resolve();const pendingFiles=new Map();
 const apiRoot='https://api.github.com/repos/'+REPOSITORY;
 function emit(data){window.dispatchEvent(new CustomEvent('portfolio:updated',{detail:displaySnapshot(data)}));}
@@ -33,12 +34,13 @@ export async function refreshGithub(){if(!accessToken)return;const value=await l
 export function requestTranslation(){return enqueue({type:'translate'});}
 async function runBatch(batch){
  try{
-  const current=await latest();const operations=batch.map(b=>b.operation);const next=applyOperations(current.snapshot,operations);const entries=[];const used=[];
+  const current=await latest();for(const b of batch)if(b.context)assertContextCurrent(current.snapshot,b.context);const operations=batch.map(b=>b.operation);const next=applyOperations(current.snapshot,operations);const entries=[];const used=[];
   for(const [url,upload] of pendingFiles){if(!operations.some(op=>op.data?.url===url))continue;
    const blob=await repo('/git/blobs',{method:'POST',body:{content:upload.base64,encoding:'base64'}});
    entries.push({path:upload.meta.path,mode:'100644',type:'blob',sha:blob.sha});next.files.push(upload.meta);used.push(url);
   }
   for(const op of operations.filter(o=>o.type==='removeFile')){const old=current.snapshot.files.find(f=>f.id===op.id);entries.push({path:old.path,mode:'100644',type:'blob',sha:null});}
+  for(const b of batch)if(b.assistantId)entries.push({path:'ai/applied/'+b.assistantId+'.json',mode:'100644',type:'blob',content:JSON.stringify({request_id:b.assistantId,applied_at:new Date().toISOString(),changes:b.reviewedPlan.changes,summary:b.reviewedPlan.summary},null,2)+'\n'});
   entries.push({path:'portfolio-data.json',mode:'100644',type:'blob',content:JSON.stringify(next,null,2)+'\n'});
   const tree=await repo('/git/trees',{method:'POST',body:{base_tree:current.tree,tree:entries}});
   const commit=await repo('/git/commits',{method:'POST',body:{message:'Update portfolio content from GitHub dashboard',tree:tree.sha,parents:[current.head]}});
@@ -48,7 +50,37 @@ async function runBatch(batch){
   for(const b of batch){const result=next.records.find(r=>r.id===b.operation.id);b.resolve(result||{ok:true});}
  }catch(e){for(const b of batch)b.reject(e);}
 }
-function enqueue(operation){return new Promise((resolve,reject)=>{queued.push({operation,resolve,reject});if(!scheduled){scheduled=true;queueMicrotask(()=>{scheduled=false;const batch=queued.splice(0);tail=tail.then(()=>runBatch(batch),()=>runBatch(batch));});}});}
+function enqueue(operation,options={}){return new Promise((resolve,reject)=>{queued.push({operation,resolve,reject,...options});if(!scheduled){scheduled=true;queueMicrotask(()=>{scheduled=false;const batch=queued.splice(0);tail=tail.then(()=>runBatch(batch),()=>runBatch(batch));});}});}
+async function readJson(path,ref='main'){
+ try{const file=await repo('/contents/'+path+'?ref='+encodeURIComponent(ref));if(file.encoding!=='base64')throw Error('The assistant file could not be read.');return JSON.parse(decode64(file.content));}catch(e){if(e.status===404)return null;throw e;}
+}
+export async function assistantHistory(){
+ let files;try{files=await repo('/contents/ai/requests?ref=main');}catch(e){if(e.status===404)return [];throw e;}
+ const ids=files.filter(f=>f.type==='file'&&f.name.endsWith('.json')&&REQUEST_ID.test(f.name.slice(0,-5))).map(f=>f.name.slice(0,-5)).sort().reverse().slice(0,10);
+ return Promise.all(ids.map(id=>readJson('ai/requests/'+id+'.json')));
+}
+export async function assistantProposal(id){
+ if(!REQUEST_ID.test(id))throw Error('Invalid assistant request.');
+ const [proposal,applied]=await Promise.all([readJson('ai/proposals/'+id+'.json'),readJson('ai/applied/'+id+'.json')]);return {proposal,applied};
+}
+export function submitAssistantRequest(prompt,context){
+ const task=async()=>{
+  validateContext(context);if(typeof prompt!=='string'||prompt.trim().length<3||prompt.length>4000)throw Error('Use a prompt between 3 and 4,000 characters.');
+  if(/github_pat_|ghp_[a-z0-9]{10}|sk-[a-z0-9]{16}/i.test(prompt))throw Error('Do not put access tokens or API keys in a public prompt.');
+  const current=await latest();assertContextCurrent(current.snapshot,context);
+  const id=Date.now()+'-'+crypto.randomUUID();const request={version:1,id,prompt:prompt.trim(),context,created_at:new Date().toISOString(),created_by:account};
+  const tree=await repo('/git/trees',{method:'POST',body:{base_tree:current.tree,tree:[{path:'ai/requests/'+id+'.json',mode:'100644',type:'blob',content:JSON.stringify(request,null,2)+'\n'}]}});
+  const commit=await repo('/git/commits',{method:'POST',body:{message:'Request AI portfolio change preview',tree:tree.sha,parents:[current.head]}});
+  try{await repo('/git/refs/heads/main',{method:'PATCH',body:{sha:commit.sha,force:false}});}catch(e){let saved=false;try{saved=(await repo('/git/ref/heads/main')).object.sha===commit.sha;}catch{}if(!saved)throw e;}
+  return request;
+ };
+ const result=tail.then(task,task);tail=result.catch(()=>{});return result;
+}
+export function applyAssistantPlan(plan,context,snapshot,id){
+ const normalized=planOperations(snapshot,plan,context);
+ if(id&&!REQUEST_ID.test(id))throw Error('Invalid assistant request.');
+ return Promise.all(normalized.operations.map((operation,index)=>enqueue(operation,{context,...(id&&index===0?{assistantId:id,reviewedPlan:plan}:{})})));
+}
 const entity=kind=>({
  list:async({limit=200,cursor}={})=>{const {snapshot}=await latest();const rows=snapshot.records.filter(r=>r.entity===kind).sort((a,b)=>(a.order||0)-(b.order||0));const start=Number(cursor)||0;return {items:displaySnapshot({...snapshot,records:rows.slice(start,start+limit)}).records,has_more:rows.length>start+limit,next_cursor:rows.length>start+limit?String(start+limit):null};},
  create:data=>enqueue({type:'create',kind,id:crypto.randomUUID(),data}),

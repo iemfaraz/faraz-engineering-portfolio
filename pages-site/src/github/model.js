@@ -13,6 +13,11 @@ export function recordData(record){const {id,entity,created_date,...data}=record
 export function applyOperations(snapshot,operations){
  const next=structuredClone(snapshot);
  for(const op of operations){
+  if(op.type==='appearance'){
+   const allowed={accent:['blue','emerald','gold','violet'],hero_size:['compact','standard','large']};
+   if(!op.data||Object.keys(op.data).some(k=>!allowed[k]?.includes(op.data[k])))throw Error('Unsupported appearance setting.');
+   next.appearance={...next.appearance,...op.data};continue;
+  }
   if(op.type==='translate'){next.translation={...next.translation,status:'queued',requested_at:new Date().toISOString()};continue;}
   if(op.type==='removeFile'){
    const file=next.files.find(f=>f.id===op.id);if(!file)throw Error('File not found.');
@@ -24,6 +29,7 @@ export function applyOperations(snapshot,operations){
   if(op.type==='delete'){if(index<0)throw Error('Item no longer exists. Refresh the dashboard.');next.records.splice(index,1);continue;}
   if(op.type==='update'&&index<0)throw Error('Item no longer exists. Refresh the dashboard.');
   const data=schemas[op.kind].parse(op.type==='update'?{...recordData(next.records[index]),...op.data}:op.data);
+  if(op.kind==='TextOverride'&&next.records.some(r=>r.entity==='TextOverride'&&r.lang===data.lang&&r.path===data.path&&r.id!==op.id))throw Error('This text field changed. Refresh before saving.');
   if(op.kind==='Project'&&next.records.some(r=>r.entity==='Project'&&r.slug===data.slug&&r.id!==op.id))throw Error('That project URL slug is already used.');
   if(op.kind==='Recommendation'&&data.status!=='approved')throw Error('Only approved recommendations can be stored in this public repository.');
   const row={...data,id:op.id,entity:op.kind,created_date:index<0?new Date().toISOString():next.records[index].created_date};

@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {LiveContentProvider,useLiveContent} from './LiveContent';
 import CvPage from './CvText';
 import AdminPortal from './GithubDashboard';
+import Appearance from './Appearance';
 import './styles.css';
 import {ThemeProvider} from '@/components/portfolio/ThemeProvider';
 import {LanguageProvider} from './LanguageProvider';
@@ -27,6 +28,6 @@ function App(){
  const [hash,setHash]=useState(window.location.hash);
  useEffect(()=>{const change=()=>{setHash(window.location.hash);requestAnimationFrame(()=>{if(window.location.hash.startsWith('#/projects/'))window.scrollTo(0,0);else document.getElementById(window.location.hash.slice(1)||'top')?.scrollIntoView();});};window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change);},[]);
  const project=hash.match(/^#\/projects\/([^/?#]+)$/);
- return <ThemeProvider><LanguageProvider>{hash.startsWith('#/admin')?<AdminPortal/>:project?<ProjectDetail slug={decodeURIComponent(project[1])}/>:hash==='#/cv/ar'?<CvPage/>:<><Nav/><main><Hero/><Stats/><Profile/><Intent/><Expertise/><Projects/><Sheets/><Experience/><Films/><Recommendations items={recommendations}/><Toolkit/><LinkedIn/><Contact/></main></>}</LanguageProvider></ThemeProvider>;
+ return <ThemeProvider><LanguageProvider><Appearance/>{hash.startsWith('#/admin')?<AdminPortal/>:project?<ProjectDetail slug={decodeURIComponent(project[1])}/>:hash==='#/cv/ar'?<CvPage/>:<><Nav/><main><Hero/><Stats/><Profile/><Intent/><Expertise/><Projects/><Sheets/><Experience/><Films/><Recommendations items={recommendations}/><Toolkit/><LinkedIn/><Contact/></main></>}</LanguageProvider></ThemeProvider>;
 }
 createRoot(document.getElementById('root')).render(<LiveContentProvider><App/></LiveContentProvider>);

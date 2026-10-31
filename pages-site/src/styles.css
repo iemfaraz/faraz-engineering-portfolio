@@ -193,3 +193,5 @@
     scroll-behavior: auto;
   }
 }
+html[data-hero-size="compact"] #top h1 {font-size:clamp(2.6rem,8vw,5.8rem)}
+html[data-hero-size="large"] #top h1 {font-size:clamp(3.5rem,12vw,8.5rem)}
