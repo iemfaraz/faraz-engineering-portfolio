@@ -1,9 +1,11 @@
-# GitHub Pages portfolio
+# Public GitHub Pages portfolio
 
-The public website is https://iemfaraz.github.io/faraz-engineering-portfolio/ . Run `npm ci && npm run build` here. The workflow `.github/workflows/pages.yml` publishes pushes to main. `prepare-source.mjs` copies presentation components and bundled media from `../independent` into ignored `reference/` for a standalone build.
+Static portfolio built from the design and content in `../independent`. Run `npm ci` and `npm run build` from this directory. The workflow `.github/workflows/pages.yml` publishes `dist/` on pushes to main. Repository Settings → Pages must use GitHub Actions.
 
-The Manage link opens the owner-protected dashboard on the independent Site. The frontend reads `/api/portfolio` there with anonymous, read-only CORS requests, so saved projects, covers, videos, drawings, CVs and section text can appear on the next reload without a GitHub rebuild. This requires the Site owner to enable public viewing of portfolio data and media. Until then, the website falls back to bundled content. Admin mutations stay owner-only and reject cross-origin writes.
+Public URL: https://iemfaraz.github.io/faraz-engineering-portfolio/
 
-Recommendation forms prepare an email, which the visitor sends using their email application. Approved backend recommendations can be displayed from the live feed. Arabic CV uploads can be independent PDF files; no AI translation service is configured.
+Project pages use hash links so direct links work on static GitHub Pages hosting. Photo, CV and intro video are bundled. English/Arabic and theme preferences run locally in the browser. Recommendation forms prepare an email; the visitor completes sending in their email application. There are no API calls, login, file uploads or database operations in this static version. The complete private backend remains in `independent/` and its Sites deployment.
 
-The unused Next.js sample workflow was moved to `.github/workflow-templates/nextjs-unused.yml` to avoid a competing deployment; this public frontend is built with Vite.
+## Dashboard within GitHub Pages
+
+Open `https://iemfaraz.github.io/faraz-engineering-portfolio/#/admin` or click Dashboard. This route embeds the real protected owner dashboard; credentials and mutations remain on the backend origin. Native ChatGPT sign-in runs at the top level and returns to this route. Browsers restricting third-party cookies may need the supplied separate-window sign-in fallback. `/admin/` redirects to this hash route.

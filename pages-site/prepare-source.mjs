@@ -7,3 +7,6 @@ for(const dir of ['components/portfolio','content','public']){mkdirSync(target+'
 for(const name of ['components/ProjectDetail.jsx','components/CvPage.jsx','components/portfolio/ArabicCvSheet.jsx','lib/download-pdf.js','components/ui/image.jsx','hooks/use-cv-url.js','lib/utils.js','lib/content-fields.js','lib/project-list.js','tailwind.config.js']){mkdirSync(target+'/'+name.split('/').slice(0,-1).join('/'),{recursive:true});copyFileSync(source+'/'+name,target+'/'+name);}
 
 for(const name of ["LanguageProvider","MediaProvider","ProjectsProvider","Nav","RecommendationForm"]){const exports=["Nav","RecommendationForm"].includes(name)?"export {default}":"export *";writeFileSync(target+"/components/portfolio/"+name+".jsx",exports+" from \"../../../src/"+name+".jsx\";\n");}
+
+mkdirSync(target+'/public/admin',{recursive:true});
+writeFileSync(target+'/public/admin/index.html','<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=../#/admin"><title>Portfolio dashboard</title></head><body><a href="../#/admin">Open portfolio dashboard</a></body></html>');

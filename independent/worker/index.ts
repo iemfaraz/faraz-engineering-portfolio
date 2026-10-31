@@ -23,7 +23,15 @@ const worker = {
         },
       };
     }
-    return runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
+    return runWithConnectorBinding(binding, async () => {
+      const response = await handler.fetch(request, env, ctx);
+      if (new URL(request.url).pathname.startsWith('/admin')) {
+        const headers = new Headers(response.headers);
+        headers.set('Content-Security-Policy', "frame-ancestors 'self' https://iemfaraz.github.io https://chatgpt.com https://*.chatgpt.com");
+        return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+      }
+      return response;
+    });
   },
 };
 
