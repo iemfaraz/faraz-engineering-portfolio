@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "id": "1793479535850-e5a979bc-da02-42e8-b680-3ea6c4bb4aa8",
+  "prompt": "Rewrite this section more concisely for Saudi electrical engineering recruiters. Keep all facts and dates unchanged.",
+  "context": {
+    "scope": "section",
+    "label": "Buttons and interface",
+    "entries": [
+      {
+        "id": "ui.langButton",
+        "field": "value",
+        "value": "العربية",
+        "fallback": "العربية"
+      },
+      {
+        "id": "ui.cv",
+        "field": "value",
+        "value": "Download CV",
+        "fallback": "Download CV"
+      },
+      {
+        "id": "ui.cvEnglish",
+        "field": "value",
+        "value": "English version",
+        "fallback": "English version"
+      },
+      {
+        "id": "ui.cvArabic",
+        "field": "value",
+        "value": "Arabic version",
+        "fallback": "Arabic version"
+      },
+      {
+        "id": "ui.cvPdf",
+        "field": "value",
+        "value": "Download PDF",
+        "fallback": "Download PDF"
+      },
+      {
+        "id": "ui.cvPreparing",
+        "field": "value",
+        "value": "Preparing…",
+        "fallback": "Preparing…"
+      },
+      {
+        "id": "ui.cvPdfFailed",
+        "field": "value",
+        "value": "The PDF could not be built — please try again.",
+        "fallback": "The PDF could not be built — please try again."
+      },
+      {
+        "id": "ui.cvBack",
+        "field": "value",
+        "value": "Back to the site",
+        "fallback": "Back to the site"
+      },
+      {
+        "id": "ui.cvMissing",
+        "field": "value",
+        "value": "The Arabic CV is not ready yet.",
+        "fallback": "The Arabic CV is not ready yet."
+      },
+      {
+        "id": "ui.email",
+        "field": "value",
+        "value": "Email me",
+        "fallback": "Email me"
+      },
+      {
+        "id": "ui.whatsapp",
+        "field": "value",
+        "value": "WhatsApp",
+        "fallback": "WhatsApp"
+      },
+      {
+        "id": "ui.linkedin",
+        "field": "value",
+        "value": "LinkedIn",
+        "fallback": "LinkedIn"
+      },
+      {
+        "id": "ui.call",
+        "field": "value",
+        "value": "Call",
+        "fallback": "Call"
+      },
+      {
+        "id": "ui.allProjects",
+        "field": "value",
+        "value": "All projects",
+        "fallback": "All projects"
+      },
+      {
+        "id": "ui.nextProject",
+        "field": "value",
+        "value": "Next project",
+        "fallback": "Next project"
+      },
+      {
+        "id": "ui.prevProject",
+        "field": "value",
+        "value": "Previous project",
+        "fallback": "Previous project"
+      },
+      {
+        "id": "ui.close",
+        "field": "value",
+        "value": "Close",
+        "fallback": "Close"
+      },
+      {
+        "id": "ui.playFilm",
+        "field": "value",
+        "value": "Play intro film",
+        "fallback": "Play intro film"
+      },
+      {
+        "id": "ui.sections",
+        "field": "value",
+        "value": "Sections",
+        "fallback": "Sections"
+      },
+      {
+        "id": "ui.shown",
+        "field": "value",
+        "value": "shown",
+        "fallback": "shown"
+      },
+      {
+        "id": "ui.viewProject",
+        "field": "value",
+        "value": "View sheet",
+        "fallback": "View sheet"
+      }
+    ]
+  },
+  "created_at": "2026-10-31T20:45:35.850Z",
+  "created_by": "iemfaraz"
+}
