@@ -38,3 +38,10 @@ Nothing changes on the live portfolio until the owner reviews the before/after v
 Advanced JSON change plans use `{"summary":"...","changes":[{"target":"section","id":"hero.lead","field":"value","value":"New wording"}]}`. Validate and review them in the selected scope. This mode does not execute JavaScript or shell code. The local model is constrained to structured JSON; shared validation, record schemas and stale-data checks are enforced before application. The connected token needs Contents: Read and write, with no additional Actions permission.
 
 Assistant checks: `python -m unittest discover -s pages-site/assistant -p test_worker.py`, `npm test` from pages-site, and `python pages-site/assistant/worker.py --smoke` after installing assistant requirements. The assistant workflow runs an actual model smoke test on source changes.
+
+
+### Recommendation review
+
+Visitors submit recommendations to the existing private D1 inbox service. Anonymous intake requires consent, validates bounded fields, uses a honeypot and an hourly rate limit. Pending and rejected records, email, phone, profile URL, project context and owner notes never enter portfolio-data.json or the public feed. The GitHub dashboard Recommendations tab shows private submissions for review. Owner approval publishes only name, role, company, relationship and message; a stable public ID makes retries idempotent. Unpublish before rejecting or permanently deleting private details. Existing published recommendations are preserved.
+
+Inbox review uses the existing GitHub repository write boundary without sending a GitHub PAT to the inbox service. The dashboard commits a SHA-256 digest of a random ten-minute proof under .recommendation-access/. Only the digest, scope and timestamps are public; the separate random secret remains in memory. The service verifies the proof against the fixed repository main branch on each private request. Disconnecting clears the browser proof. Native hosted-site authentication remains unchanged. Source and schema migrations for this service are archived in independent/; its live service must be deployed separately from GitHub Pages.

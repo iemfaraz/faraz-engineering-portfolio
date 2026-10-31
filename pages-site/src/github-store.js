@@ -1,11 +1,13 @@
+import {reviewedPublicData,recommendationRecordId} from './recommendation-review.js';
 import {REPOSITORY,PUBLIC_ORIGIN,validateSnapshot,applyOperations,displaySnapshot,uploadType} from './github/model.js';
 import {githubError} from './github/errors.js';
 import {assertContextCurrent,planOperations,validateContext,REQUEST_ID} from './assistant-plan.js';
+let reviewAccess=null;let reviewPending=null;
 let accessToken='';let account='';let queued=[];let scheduled=false;let tail=Promise.resolve();const pendingFiles=new Map();
 const apiRoot='https://api.github.com/repos/'+REPOSITORY;
 function emit(data){window.dispatchEvent(new CustomEvent('portfolio:updated',{detail:displaySnapshot(data)}));}
 export function githubSession(){return {connected:!!accessToken,account};}
-export function disconnectGithub(){accessToken='';account='';pendingFiles.clear();window.dispatchEvent(new Event('portfolio:auth'));}
+export function disconnectGithub(){reviewAccess=null;reviewPending=null;accessToken='';account='';pendingFiles.clear();window.dispatchEvent(new Event('portfolio:auth'));}
 async function api(path,{method='GET',body}={}){
  if(!accessToken)throw Error('Connect your repository-scoped GitHub token first.');
  if(!(path==='/user'||path.startsWith('/repos/'+REPOSITORY)))throw Error('Invalid GitHub target.');
@@ -102,3 +104,28 @@ export async function request(path,options={}){
  if(path.startsWith('files/')&&options.method==='DELETE')return enqueue({type:'removeFile',id:path.slice(6)});
  throw Error('Unsupported dashboard operation.');
 }
+
+// The GitHub PAT never leaves api.github.com. This separate short-lived random
+// secret proves repository write access to the private inbox; only its hash is committed.
+export async function createRecommendationReviewAccess(){
+ if(!accessToken)throw Error('Connect GitHub to review recommendations.');
+ if(reviewAccess&&reviewAccess.expires_at>Date.now()+45000)return reviewAccess.authorization;
+ if(reviewPending)return reviewPending;
+ const connectedToken=accessToken;
+ const task=async()=>{
+  if(connectedToken!==accessToken)throw Error('GitHub connection changed. Reconnect and retry.');
+  const current=await latest();const created_at=Date.now(),id=created_at+'-'+crypto.randomUUID();
+  const secret=Array.from(crypto.getRandomValues(new Uint8Array(32))).map(x=>x.toString(16).padStart(2,'0')).join('');
+  const secret_hash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(secret)))).map(x=>x.toString(16).padStart(2,'0')).join('');
+  const expires_at=created_at+600000;
+  const proof={version:1,scope:'recommendation-review',created_at,expires_at,secret_hash};
+  const tree=await repo('/git/trees',{method:'POST',body:{base_tree:current.tree,tree:[{path:'.recommendation-access/'+id+'.json',mode:'100644',type:'blob',content:JSON.stringify(proof)+'\n'}]}});
+  const commit=await repo('/git/commits',{method:'POST',body:{message:'Authorize private recommendation review for ten minutes',tree:tree.sha,parents:[current.head]}});
+  await repo('/git/refs/heads/main',{method:'PATCH',body:{sha:commit.sha,force:false}});
+  if(connectedToken!==accessToken)throw Error('GitHub connection changed. Reconnect and retry.');
+  reviewAccess={authorization:id+'.'+secret,expires_at};return reviewAccess.authorization;
+ };
+ const result=tail.then(task,task);tail=result.catch(()=>{});reviewPending=result;
+ try{return await result;}finally{if(reviewPending===result)reviewPending=null;}
+}
+export function publishReviewedRecommendation(id,data,privatePhone){return enqueue({type:'create',kind:'Recommendation',id:recommendationRecordId(id),data:reviewedPublicData(data,privatePhone)});}

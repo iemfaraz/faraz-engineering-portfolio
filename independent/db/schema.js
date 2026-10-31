@@ -9,3 +9,7 @@ export const files=sqliteTable('files',{
 export const limits=sqliteTable('rate_limits',{
  key:text('key').primaryKey(),count:integer('count').notNull(),expires:integer('expires').notNull(),
 });
+
+export const recommendationSubmissions=sqliteTable('recommendation_submissions',{
+ id:text('id').primaryKey(),data:text('data').notNull(),status:text('status').notNull().default('pending'),notes:text('notes').notNull().default(''),createdAt:text('created_at').notNull(),updatedAt:text('updated_at').notNull(),reviewedAt:text('reviewed_at'),
+},t=>[index('recommendation_status_created_idx').on(t.status,t.createdAt)]);

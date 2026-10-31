@@ -1,3 +1,4 @@
+import {handleRecommendationInbox} from './recommendation-inbox.js';
 import {initialize} from './seed.js';
 import {schemas,validate,publicRecommendation,publicRecord,uploadType} from './validation.js';
 export const ADMIN_EMAIL='faraznawaz2014@gmail.com';
@@ -117,6 +118,7 @@ async function handleInner(request,env){
 }
 
 export async function handle(request,env){
+ const inbox=await handleRecommendationInbox(request,env);if(inbox)return inbox;
  const origin=request.headers.get('origin');
  const allowed=origin==='https://iemfaraz.github.io';
  if(request.method==='OPTIONS')return new Response(null,{status:allowed?204:403,headers:allowed?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, HEAD','Access-Control-Max-Age':'3600','Vary':'Origin'}:{}});
