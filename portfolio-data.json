@@ -487,13 +487,13 @@
     }
   ],
   "translation": {
-    "status": "complete",
+    "status": "queued",
     "engine": "Argos Translate en-ar (local neural model)",
     "cv_source_url": "https://iemfaraz.github.io/faraz-engineering-portfolio/uploads/3debd3d8-8255-4856-be23-5a0c35d52361.pdf",
     "cv_media_id": "ba0bf72e-b5c4-5fda-ac69-0073caec951e",
     "cv_version_id": "0f1dbe61-6c50-5739-a346-fcfa06e1daac",
     "updated_at": "2026-10-31T19:54:15.919184+00:00",
-    "requested_at": "2026-10-31T19:52:58.479Z"
+    "requested_at": "2026-10-31T20:21:40.860Z"
   },
   "localization": {
     "ar": {
