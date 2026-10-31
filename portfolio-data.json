@@ -355,6 +355,15 @@
       "id": "55a7d328-539f-48a8-a554-7eae59517705",
       "entity": "MediaItem",
       "created_date": "2026-10-31T20:28:59.811Z"
+    },
+    {
+      "kind": "cv_ar",
+      "title": "Faraz_Nawaz_Electrical_engineer_cv.pdf",
+      "url": "https://iemfaraz.github.io/faraz-engineering-portfolio/uploads/be8ef0e0-4317-4311-b49e-853c38ed4890.pdf",
+      "order": 0,
+      "id": "8b9691e2-60dc-4d68-97a8-c8f2026d2153",
+      "entity": "MediaItem",
+      "created_date": "2026-10-31T20:29:39.081Z"
     }
   ],
   "files": [
@@ -509,6 +518,14 @@
       "mime": "application/pdf",
       "size": 148072,
       "created_at": "2026-10-31T20:28:58.784Z"
+    },
+    {
+      "id": "be8ef0e0-4317-4311-b49e-853c38ed4890.pdf",
+      "path": "uploads/be8ef0e0-4317-4311-b49e-853c38ed4890.pdf",
+      "name": "Faraz_Nawaz_Electrical_engineer_cv.pdf",
+      "mime": "application/pdf",
+      "size": 148072,
+      "created_at": "2026-10-31T20:29:38.022Z"
     }
   ],
   "translation": {
@@ -518,7 +535,7 @@
     "cv_media_id": "ba0bf72e-b5c4-5fda-ac69-0073caec951e",
     "cv_version_id": "0f1dbe61-6c50-5739-a346-fcfa06e1daac",
     "updated_at": "2026-10-31T20:22:36.021007+00:00",
-    "requested_at": "2026-10-31T20:28:59.812Z"
+    "requested_at": "2026-10-31T20:29:39.081Z"
   },
   "localization": {
     "ar": {
