@@ -32,9 +32,10 @@ export function applyOperations(snapshot,operations){
  const changesEnglish=operations.some(op=>{
   const before=snapshot.records.find(r=>r.id===op.id&&r.entity===op.kind);
   const after=next.records.find(r=>r.id===op.id&&r.entity===op.kind);
-  if(op.kind==='Project')return ['title_en','summary_en','scope_en'].some(key=>before?.[key]!==after?.[key]);
+  if(op.kind==='Project')return ['title_en','summary_en','scope_en','tags','engagement','office','period','disciplines','standards'].some(key=>before?.[key]!==after?.[key]);
   if(op.kind==='TextOverride')return (before?.lang==='en'||after?.lang==='en')&&before?.value!==after?.value;
-  return op.kind==='MediaItem'&&(before?.kind==='cv'||after?.kind==='cv')&&before?.url!==after?.url;
+  if(op.kind==='Recommendation')return ['name','job_title','company','relation','message'].some(key=>before?.[key]!==after?.[key]);
+  return op.kind==='MediaItem'&&(['title','note'].some(key=>before?.[key]!==after?.[key])||((before?.kind==='cv'||after?.kind==='cv')&&before?.url!==after?.url));
  });
  if(changesEnglish)next.translation={...next.translation,status:'queued',requested_at:new Date().toISOString()};
  next.initialized=true;return next;

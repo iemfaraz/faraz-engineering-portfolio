@@ -24,12 +24,15 @@ test('GitHub saves batch atomically, never force refs, and disconnect clears acc
  globalThis.window=new EventTarget();globalThis.CustomEvent=class extends Event{constructor(type,options){super(type);this.detail=options.detail;}};
  const store=await import('../src/github-store.js');const calls=[];
  globalThis.fetch=async(url,options)=>{calls.push({url,options});assert.ok(url.startsWith('https://api.github.com/'));assert.equal(options.credentials,'omit');assert.equal(options.headers.Authorization,'Bearer test-only-token');const path=new URL(url).pathname;
- let data=path==='/user'?{login:'test-user'}:path.endsWith('/git/ref/heads/main')?{object:{sha:'head'}}:path.endsWith('/git/commits/head')?{tree:{sha:'tree'}}:path.endsWith('/contents/portfolio-data.json')?{encoding:'base64',content:Buffer.from(JSON.stringify(snapshot)).toString('base64')}:path.endsWith('/git/trees')?{sha:'new-tree'}:path.endsWith('/git/commits')?{sha:'new-commit'}:path.endsWith('/git/refs/heads/main')?{object:{sha:'new-commit'}}:{permissions:{push:true}};
+ let data=path==='/user'?{login:'test-user'}:path.endsWith('/git/ref/heads/main')?{object:{sha:'head'}}:path.endsWith('/git/commits/head')?{tree:{sha:'tree'}}:path.endsWith('/contents/portfolio-data.json')?{encoding:'base64',content:Buffer.from(JSON.stringify(snapshot)).toString('base64')}:path.endsWith('/git/blobs')?{sha:'permission-probe'}:path.endsWith('/git/trees')?{sha:'new-tree'}:path.endsWith('/git/commits')?{sha:'new-commit'}:path.endsWith('/git/refs/heads/main')?{object:{sha:'new-commit'}}:{permissions:{push:true}};
  return {status:200,ok:true,json:async()=>data};};
  await store.connectGithub('test-only-token');
+ assert.equal(calls.filter(c=>c.url.endsWith('/git/blobs')&&c.options.method==='POST').length,1);
  await Promise.all(['en','ar'].map(lang=>store.portfolioApi.entities.TextOverride.create({path:'hero.title',lang,value:'Test'})));
  const trees=calls.filter(c=>c.options.method==='POST'&&c.url.endsWith('/git/trees'));assert.equal(trees.length,1);
  const entries=JSON.parse(trees[0].options.body).tree;assert.equal(JSON.parse(entries[0].content).records.length,snapshot.records.length+2);
  const patch=calls.find(c=>c.options.method==='PATCH');assert.equal(JSON.parse(patch.options.body).force,false);
  store.disconnectGithub();assert.equal(store.githubSession().connected,false);const before=calls.length;await assert.rejects(store.refreshGithub().then(()=>store.portfolioApi.entities.Project.delete('missing')));assert.equal(calls.length,before);
+ globalThis.fetch=async(url)=>({status:url.endsWith('/git/blobs')?403:200,ok:!url.endsWith('/git/blobs'),headers:{get:()=>null},json:async()=>url.endsWith('/git/blobs')?{message:'Resource not accessible by personal access token'}:url.endsWith('/user')?{login:'test-user'}:url.endsWith('/git/ref/heads/main')?{object:{sha:'head'}}:url.endsWith('/git/commits/head')?{tree:{sha:'tree'}}:url.includes('/contents/')?{encoding:'base64',content:Buffer.from(JSON.stringify(snapshot)).toString('base64')}:{permissions:{push:true}}});
+ await assert.rejects(store.connectGithub('read-only-token'),/Resource owner = iemfaraz/);assert.equal(store.githubSession().connected,false);
 });

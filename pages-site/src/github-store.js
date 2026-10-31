@@ -1,4 +1,5 @@
 import {REPOSITORY,PUBLIC_ORIGIN,validateSnapshot,applyOperations,displaySnapshot,uploadType} from './github/model.js';
+import {githubError} from './github/errors.js';
 let accessToken='';let account='';let queued=[];let scheduled=false;let tail=Promise.resolve();const pendingFiles=new Map();
 const apiRoot='https://api.github.com/repos/'+REPOSITORY;
 function emit(data){window.dispatchEvent(new CustomEvent('portfolio:updated',{detail:displaySnapshot(data)}));}
@@ -9,7 +10,7 @@ async function api(path,{method='GET',body}={}){
  if(!(path==='/user'||path.startsWith('/repos/'+REPOSITORY)))throw Error('Invalid GitHub target.');
  const response=await fetch('https://api.github.com'+path,{method,credentials:'omit',cache:'no-store',headers:{'Accept':'application/vnd.github+json','Authorization':'Bearer '+accessToken,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},...(body?{body:JSON.stringify(body)}:{})});
  const data=response.status===204?null:await response.json();
- if(!response.ok){const reason=response.status===401?'Your GitHub token is invalid or expired.':response.status===403?'GitHub denied this action. Check that the token has Contents: Read and write for this repository.':response.status===409||response.status===422?'The repository changed or GitHub rejected the commit. Refresh and check the repository before retrying.':data?.message||'GitHub request failed.';throw Object.assign(new Error(reason),{status:response.status});}
+ if(!response.ok)throw githubError(response,data,method+' '+path);
  return data;
 }
 const repo=(path,options)=>api('/repos/'+REPOSITORY+path,options);
@@ -22,7 +23,11 @@ async function latest(){
 }
 export async function connectGithub(token){
  if(!token.trim())throw Error('Enter a fine-grained GitHub token.');accessToken=token.trim();
- try{const [user,repository]=await Promise.all([api('/user'),repo('')]);if(!repository.permissions?.push)throw Error('This GitHub account does not have write access to the portfolio repository.');const value=await latest();account=user.login;emit(value.snapshot);window.dispatchEvent(new Event('portfolio:auth'));return account;}catch(e){disconnectGithub();throw e;}
+ try{const [user,repository]=await Promise.all([api('/user'),repo('')]);if(!repository.permissions?.push)throw Error('This GitHub account does not have write access to iemfaraz/faraz-engineering-portfolio. Use a token owned by an account with repository write access.');const value=await latest();
+  // An unreferenced blob proves Contents:write without editing a file or branch.
+  const probe=await repo('/git/blobs',{method:'POST',body:{content:'Portfolio dashboard write-permission check\n',encoding:'utf-8'}});
+  if(!probe?.sha)throw Error('GitHub did not confirm write permission. Check token settings and reconnect.');
+  account=user.login;emit(value.snapshot);window.dispatchEvent(new Event('portfolio:auth'));return account;}catch(e){disconnectGithub();throw e;}
 }
 export async function refreshGithub(){if(!accessToken)return;const value=await latest();emit(value.snapshot);return value.snapshot;}
 export function requestTranslation(){return enqueue({type:'translate'});}

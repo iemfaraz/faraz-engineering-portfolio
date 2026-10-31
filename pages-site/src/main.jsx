@@ -16,7 +16,7 @@ import Projects from '@/components/portfolio/Projects';
 import Sheets from '@/components/portfolio/Sheets';
 import Experience from '@/components/portfolio/Experience';
 import Films from '@/components/portfolio/Films';
-import Recommendations from '@/components/portfolio/Recommendations';
+import Recommendations from './LocalizedRecommendations';
 import Toolkit from '@/components/portfolio/Toolkit';
 import LinkedIn from '@/components/portfolio/LinkedIn';
 import Contact from '@/components/portfolio/Contact';

@@ -216,13 +216,16 @@ def render_cv(pages, target):
     HTML(string=markup).write_pdf(target)
 
 
-def translate_snapshot(snapshot, state, root, engine, extract=extract_cv, render=render_cv):
+def translate_snapshot(snapshot, state, root, engine, extract=extract_cv, render=render_cv, defaults=None):
     result = copy.deepcopy(snapshot)
     state = copy.deepcopy(state)
     old = state.setdefault('sources', {})
     records = result['records']
     stamp = now()
     count = 0
+    localized = result.setdefault('localization', {}).setdefault('ar', {})
+    for group in ['projects', 'media', 'recommendations']:
+        localized.setdefault(group, {})
 
     def process(key, source, existing, setter):
         nonlocal count
@@ -234,6 +237,56 @@ def translate_snapshot(snapshot, state, root, engine, extract=extract_cv, render
             setter(translated(source, engine))
             count += 1
         old[key] = hashed
+
+    # Every shared display field also needs an Arabic value. Keep these separate
+    # from canonical English records so editing English never edits the source.
+    groups = {'Project': ('projects', ['tags', 'engagement', 'office', 'period', 'disciplines', 'standards']),
+              'MediaItem': ('media', ['title', 'note']),
+              'Recommendation': ('recommendations', ['name', 'job_title', 'company', 'relation', 'message'])}
+    for row in list(records):
+        if row['entity'] not in groups:
+            continue
+        if row['entity'] == 'MediaItem' and row.get('kind') == 'cv_ar':
+            continue
+        group, fields = groups[row['entity']]
+        target = localized[group].setdefault(row['id'], {})
+        for field in fields:
+            source = row.get(field, '')
+            key = 'display:' + row['entity'] + ':' + row['id'] + ':' + field
+            if old.get(key) == digest(source) and field in target:
+                continue
+            if field in ['tags', 'disciplines', 'standards']:
+                value = ', '.join(translated(part, engine) for part in source.split(',') if part.strip())
+            elif field == 'title' and re.search(r'\.(pdf|mp4|webm|jpg|jpeg|png|webp)$', source, re.I):
+                value = {'intro_video': 'الفيديو التعريفي', 'project_video': 'فيديو المشروع',
+                         'cv': 'السيرة الذاتية بالإنجليزية', 'cv_ar': 'السيرة الذاتية بالعربية',
+                         'profile_photo': 'الصورة الشخصية', 'project_cover': 'صورة المشروع'}.get(row.get('kind'), 'ملف مرفق')
+            else:
+                value = translated(source, engine)
+            target[field] = value
+            old[key] = digest(source)
+            count += 1
+    for entity, (group, _) in groups.items():
+        ids = {r['id'] for r in records if r['entity'] == entity}
+        localized[group] = {key: value for key, value in localized[group].items() if key in ids}
+
+    # Source-code English dictionary edits are covered as well as dashboard edits.
+    if defaults:
+        def flatten(value, prefix=''):
+            if isinstance(value, str):
+                return {prefix: value}
+            out = {}
+            items = enumerate(value) if isinstance(value, list) else value.items() if isinstance(value, dict) else []
+            for key, child in items:
+                out.update(flatten(child, (prefix + '.' if prefix else '') + str(key)))
+            return out
+        english = flatten(defaults['en'])
+        arabic = flatten(defaults['ar'])
+        generated = {r['path']: r['value'] for r in localized.get('dictionary', [])}
+        for path, source in english.items():
+            process('default:' + path, source, generated.get(path, arabic.get(path)),
+                    lambda value, p=path: generated.update({p: value}))
+        localized['dictionary'] = [{'path': p, 'value': value} for p, value in generated.items() if p in english]
 
     for row in list(records):
         if row['entity'] == 'Project':
@@ -316,7 +369,9 @@ def main():
     state_path = root / 'translation-state.json'
     original = load_json(snapshot_path, {})
     try:
-        result, state, count = translate_snapshot(original, load_json(state_path, {}), root, NeuralTranslator())
+        defaults_path = os.getenv('PORTFOLIO_TRANSLATION_SOURCE')
+        defaults = load_json(Path(defaults_path), None) if defaults_path else None
+        result, state, count = translate_snapshot(original, load_json(state_path, {}), root, NeuralTranslator(), defaults=defaults)
         write_json(snapshot_path, result)
         write_json(state_path, state)
         message = 'Arabic translation completed. Updated groups: ' + str(count)

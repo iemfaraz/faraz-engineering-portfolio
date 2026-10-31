@@ -1,8 +1,10 @@
 import {useLiveContent} from './LiveContent';
+import {useLang} from './LanguageProvider';
+import {localizedRecord} from './localization.js';
 const base=import.meta.env.BASE_URL;
 export function MediaProvider({children}){return children;}
 export function useMedia(){
- const {snapshot,refresh}=useLiveContent();const media=(snapshot?.records||[]).filter(r=>r.entity==='MediaItem');
+ const {snapshot,refresh}=useLiveContent();const {lang}=useLang();const media=(snapshot?.records||[]).filter(r=>r.entity==='MediaItem').map(row=>localizedRecord(snapshot,row,lang));
  const find=kind=>media.find(r=>r.kind===kind)||null;
  const map=kind=>Object.fromEntries(media.filter(r=>r.kind===kind&&r.slug).map(r=>[r.slug,r]));
  const cv=find('cv')||{url:base+'assets/Faraz_Nawaz_CV.pdf'};

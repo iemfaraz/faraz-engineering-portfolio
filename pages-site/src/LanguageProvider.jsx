@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 import {useLiveContent} from "./LiveContent";
 import { DICTIONARIES, mergeOverrides } from "@/lib/content-fields";
+import {dictionaryWithFallback} from './localization.js';
 
 const STORAGE_KEY = "fn-lang";
 const LangContext = createContext({
@@ -47,9 +48,9 @@ export function LanguageProvider({ children }) {
       isRtl: lang === "ar",
       overrides,
       refreshContent,
-      c: mergeOverrides(lang === "ar" ? DICTIONARIES.ar : DICTIONARIES.en, forLang),
+      c: mergeOverrides(lang === "ar" ? dictionaryWithFallback(DICTIONARIES.en,DICTIONARIES.ar) : DICTIONARIES.en, [...(lang==='ar'?snapshot?.localization?.ar?.dictionary||[]:[]),...forLang]),
     };
-  }, [lang, overrides, refreshContent]);
+  }, [lang, overrides, refreshContent,snapshot]);
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
 }

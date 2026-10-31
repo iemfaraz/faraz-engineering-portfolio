@@ -92,6 +92,31 @@ class TranslationTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 module.cv_source(snapshot, self.root)
 
+    def test_all_display_fields_follow_english_without_changing_canonical_records(self):
+        self.snapshot['records'][0].update({'office': 'Design office', 'tags': 'Power, Lighting'})
+        self.snapshot['records'].append({'id': 'm', 'entity': 'MediaItem', 'kind': 'drawing', 'title': 'Lighting plan', 'note': 'Approved drawing', 'url': module.ORIGIN + 'uploads/sample.pdf'})
+        self.snapshot['records'].append({'id': 'r', 'entity': 'Recommendation', 'name': 'Example', 'job_title': 'Engineer', 'company': 'Consultancy', 'relation': 'Colleague', 'message': 'Completed the installation carefully', 'status': 'approved'})
+        result, state, _ = self.run_translation()
+        localized = result['localization']['ar']
+        self.assertIn('ترجمة', localized['projects']['p']['office'])
+        self.assertIn('ترجمة', localized['media']['m']['note'])
+        self.assertIn('ترجمة', localized['recommendations']['r']['message'])
+        self.assertEqual(result['records'][0]['office'], 'Design office')
+        result['records'][0]['office'] = 'Site office'
+        updated, _, _ = self.run_translation(result, state)
+        self.assertIn('site office', updated['localization']['ar']['projects']['p']['office'])
+        self.assertEqual(updated['localization']['ar']['media'], localized['media'])
+
+    def test_english_dictionary_source_edits_generate_arabic(self):
+        defaults = {'en': {'hero': {'text': 'Original text'}}, 'ar': {'hero': {'text': 'نص أصلي'}}}
+        result, state, _ = module.translate_snapshot(self.snapshot, {}, self.root, self.engine,
+            extract=lambda _: [['English text']], render=lambda _, out: out.write_bytes(b'%PDF-test'), defaults=defaults)
+        self.assertEqual(result['localization']['ar']['dictionary'], [])
+        defaults['en']['hero']['text'] = 'Changed wording'
+        updated, _, _ = module.translate_snapshot(result, state, self.root, self.engine,
+            extract=lambda _: [], render=lambda *_: None, defaults=defaults)
+        self.assertIn({'path': 'hero.text', 'value': 'ترجمة changed wording'}, updated['localization']['ar']['dictionary'])
+
 
 if __name__ == '__main__':
     unittest.main()

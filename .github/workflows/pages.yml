@@ -45,7 +45,10 @@ jobs:
       - name: Automatically update Arabic text and CV
         env:
           ARGOS_DEVICE_TYPE: cpu
-        run: python pages-site/translate_portfolio.py
+          PORTFOLIO_TRANSLATION_SOURCE: ${{ runner.temp }}/portfolio-translation-source.json
+        run: |
+          node pages-site/export-translation-source.mjs "$PORTFOLIO_TRANSLATION_SOURCE"
+          python pages-site/translate_portfolio.py
       - name: Save translated content to GitHub
         run: |
           git fetch origin main
