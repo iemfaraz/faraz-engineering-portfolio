@@ -34,7 +34,7 @@ async function saveRecord(env,kind,data,id){
  else{id=crypto.randomUUID();await env.DB.prepare('INSERT INTO records (id,kind,data,slug,created_at,updated_at) VALUES (?,?,?,?,?,?)').bind(id,kind,JSON.stringify(data),kind==='Project'?data.slug:null,now,now).run();}
  return {...data,id};
 }
-export async function handle(request,env){
+async function handleInner(request,env){
  try{
  const url=new URL(request.url), parts=url.pathname.split('/').filter(Boolean).slice(1), method=request.method;
  if(!['GET','HEAD'].includes(method)){
@@ -43,6 +43,12 @@ export async function handle(request,env){
  if(parts[0]==='health'){
   if(method!=='GET')fail('Method not allowed.',405);
   await env.DB.prepare('SELECT 1 AS ok').first();return json({ok:true,database:'connected',storage:!!env.BUCKET});
+ }
+ if(parts[0]==='portfolio'&&method==='GET'){
+  const {results}=await env.DB.prepare("SELECT * FROM records WHERE kind IN ('Project','MediaItem','TextOverride','CvVersion','Recommendation') ORDER BY COALESCE(json_extract(data,'$.order'),0),created_at DESC LIMIT 5000").all();
+  const records=results.filter(r=>r.kind!=='Recommendation'||JSON.parse(r.data).status==='approved').map(r=>({entity:r.kind,...publicRecord(r.kind,r)}));
+  const initialized=!!(await env.DB.prepare("SELECT id FROM records WHERE id='portfolio-initialized'").first());
+  return json({initialized,records});
  }
  if(parts[0]==='session'&&method==='GET')return json({user:identity(request,env)});
  if(parts[0]==='files'&&parts[1]&&['GET','HEAD'].includes(method)){
@@ -79,7 +85,7 @@ export async function handle(request,env){
  if(parts[0]==='backup'&&method==='GET'){
   admin(request,env);const {results}=await env.DB.prepare('SELECT * FROM records ORDER BY created_at').all();
   const files=await env.DB.prepare('SELECT * FROM files ORDER BY created_at').all();
-  return json({version:1,exported_at:new Date().toISOString(),records:results.map(r=>({kind:r.kind,...publicRecord(r.kind,r)})),files:files.results});
+  return json({version:1,exported_at:new Date().toISOString(),records:results.map(r=>({entity:r.kind,...publicRecord(r.kind,r)})),files:files.results});
  }
  if(parts[0]!=='records'||!schemas[parts[1]])fail('Endpoint not found.',404);
  const kind=parts[1],id=parts[2];
@@ -108,4 +114,16 @@ export async function handle(request,env){
   if(error.status)return json({error:error.message},error.status);
   return json({error:'The server could not complete this request. Please try again.'},500);
  }
+}
+
+export async function handle(request,env){
+ const origin=request.headers.get('origin');
+ const allowed=origin==='https://iemfaraz.github.io';
+ if(request.method==='OPTIONS')return new Response(null,{status:allowed?204:403,headers:allowed?{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Methods':'GET, HEAD','Access-Control-Max-Age':'3600','Vary':'Origin'}:{}});
+ const response=await handleInner(request,env);
+ if(allowed&&['GET','HEAD'].includes(request.method)){
+  const headers=new Headers(response.headers);headers.set('Access-Control-Allow-Origin',origin);headers.set('Vary','Origin');
+  return new Response(response.body,{status:response.status,headers});
+ }
+ return response;
 }

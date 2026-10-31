@@ -32,6 +32,7 @@ export default function Nav() {
         </nav>
 
         <div className="flex flex-none items-center gap-2">
+          <a href="https://faraz-independent-portfolio.sassydot.chatgpt.site/admin" target="_blank" rel="noopener noreferrer" className="border border-foreground/25 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground hover:border-foreground">Manage</a>
           <ThemeToggle />
           <button
             type="button"

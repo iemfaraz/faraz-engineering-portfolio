@@ -11,3 +11,8 @@ const entity=(name)=>({
  delete:(id)=>request(`records/${name}/${encodeURIComponent(id)}`,{method:'DELETE'}),
 });
 export const portfolioApi={entities:Object.fromEntries(['Project','MediaItem','TextOverride','CvVersion','Recommendation'].map(name=>[name,entity(name)]))};
+
+portfolioApi.integrations={Core:{UploadPublicFile:async({file})=>{
+ if(file.size>25*1024*1024)throw new Error('Choose a file smaller than 25 MB.');
+ const r=await request('uploads',{method:'POST',headers:{'Content-Type':'application/octet-stream','X-File-Name':file.name.replace(/[^a-zA-Z0-9._-]/g,'_')},body:file});return {file_url:r.url};
+}}};

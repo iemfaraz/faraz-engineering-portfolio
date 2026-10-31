@@ -10,7 +10,7 @@ const WHATSAPP = "https://wa.me/966551679504";
 
 export default function Hero() {
   const { c, isRtl } = useLang();
-  const { introVideo } = useMedia();
+  const { introVideo, profilePhoto } = useMedia();
   const [film, setFilm] = useState(false);
 
   return (
@@ -71,7 +71,7 @@ export default function Hero() {
           <div className="md:col-span-5">
             <figure className="border border-border bg-card">
               <div className="relative aspect-[4/5] overflow-hidden bg-secondary">
-                <Image src="/assets/photo.jpg" alt="Faraz Nawaz" className="h-full w-full object-cover" />
+                <Image src={profilePhoto?.url || "/assets/photo.jpg"} alt="Faraz Nawaz" className="h-full w-full object-cover" />
                 {introVideo ? (
                   <button
                     type="button"

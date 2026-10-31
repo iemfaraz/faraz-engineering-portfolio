@@ -62,3 +62,9 @@ Trusted identity headers are supplied and validated by the Sites gateway. Do not
 ## Verification
 
 The Node integration suite uses SQLite and an in-memory object-store test double. It tests unauthorized writes, CRUD persistence, duplicate slugs, moderation, status injection, invalid URLs, prototype-path rejection, request-size limits, cross-origin writes, submission throttling, one-time initialization, and upload attachment/deletion behavior. It does not replace a real sign-in check with the owner's account.
+
+## Dashboard and public GitHub updates
+
+The dashboard mirrors the reference tabs: Intro video, Projects, Project covers, Project videos, Drawings, CV & profile photo, Section details, Project files and Recommendations. CV uploads support independent English and Arabic PDFs; no automatic translation is configured. Project files includes a source ZIP link, content export, and uploaded-file management.
+
+The public GitHub Pages frontend can read `/api/portfolio` from this backend and resolve uploaded files to this origin. Cross-origin read permission is limited to `https://iemfaraz.github.io`; cross-origin writes remain rejected, and every admin write still checks trusted identity. The feed excludes pending/rejected recommendations. Public feeds and media require the owner to explicitly enable public viewing of this Site. Until that access is enabled, GitHub Pages keeps showing bundled content as a fallback; adding the Manage link alone does not make edits public. The private admin dashboard remains protected after public viewing is enabled.

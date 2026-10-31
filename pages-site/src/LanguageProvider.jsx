@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
+import {useLiveContent} from "./LiveContent";
 import { DICTIONARIES, mergeOverrides } from "@/lib/content-fields";
 
 const STORAGE_KEY = "fn-lang";
@@ -14,7 +15,8 @@ const LangContext = createContext({
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState("en");
-  const [overrides, setOverrides] = useState([]);
+  const {snapshot}=useLiveContent();
+  const overrides=useMemo(()=>(snapshot?.records||[]).filter(r=>r.entity==="TextOverride"),[snapshot]);
 
   const refreshContent = useCallback(async () => {}, []);
 

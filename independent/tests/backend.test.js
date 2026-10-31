@@ -64,3 +64,11 @@ test('uploaded files persist and cannot be removed while attached',async()=>{
  assert.equal((await call('files/'+file.id,'DELETE',null,owner)).status,200);
  assert.equal((await call('files/'+file.id)).status,404);
 });
+test('public content feed exposes media type correctly and hides unapproved recommendations',async()=>{
+ await call('records/MediaItem','POST',{kind:'cv_ar',title:'Arabic CV',url:'https://example.com/cv.pdf'},owner);
+ await call('recommendations','POST',{name:'Engineer',message:'A reliable engineering colleague.'});
+ const feed=await (await call('portfolio')).json();assert.ok(feed.records.some(r=>r.entity==='MediaItem'&&r.kind==='cv_ar'));assert.equal(feed.records.filter(r=>r.entity==='Recommendation').length,0);
+ const cors=await call('portfolio','GET',null,{origin:'https://iemfaraz.github.io'});assert.equal(cors.headers.get('Access-Control-Allow-Origin'),'https://iemfaraz.github.io');
+ const other=await call('portfolio','GET',null,{origin:'https://evil.test'});assert.equal(other.headers.get('Access-Control-Allow-Origin'),null);
+ assert.equal((await call('records/Project','POST',project,{...owner,origin:'https://iemfaraz.github.io'})).status,403);
+});

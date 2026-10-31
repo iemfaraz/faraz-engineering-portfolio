@@ -38,7 +38,8 @@ export function MediaProvider({ children }) {
       introVideo: items.find((item) => item.kind === "intro_video") ?? null,
       sheetCover: items.find((item) => item.kind === "drawing_cover") ?? null,
       cv: items.find((item) => item.kind === "cv") ?? null,
-      cvAr,
+      cvAr: items.find(item => item.kind === 'cv_ar') ?? cvAr,
+      profilePhoto: items.find(item => item.kind === 'profile_photo') ?? null,
       projectFiles: items.filter(item => item.kind === 'project_file'),
       drawings: items.filter((item) => item.kind === "drawing"),
       projectCovers: items.reduce((map, item) => {
