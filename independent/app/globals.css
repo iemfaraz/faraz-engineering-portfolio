@@ -1,0 +1,193 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  :root {
+    --background: 40 21% 95%;
+    --foreground: 240 2% 10%;
+    --card: 40 25% 97%;
+    --card-foreground: 240 2% 10%;
+    --popover: 40 25% 97%;
+    --popover-foreground: 240 2% 10%;
+    --primary: 220 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 40 14% 91%;
+    --secondary-foreground: 240 2% 10%;
+    --muted: 40 14% 91%;
+    --muted-foreground: 40 5% 38%;
+    --accent: 220 100% 50%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 10% 80%;
+    --input: 40 10% 80%;
+    --ring: 220 100% 50%;
+    --chart-1: 220 100% 50%;
+    --chart-2: 240 2% 10%;
+    --chart-3: 40 5% 38%;
+    --chart-4: 40 10% 80%;
+    --chart-5: 220 30% 40%;
+    --radius: 0.125rem;
+    --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+
+  .dark {
+    --background: 220 8% 8%;
+    --foreground: 40 20% 94%;
+    --card: 220 7% 11%;
+    --card-foreground: 40 20% 94%;
+    --popover: 220 7% 11%;
+    --popover-foreground: 40 20% 94%;
+    --primary: 220 100% 58%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 6% 16%;
+    --secondary-foreground: 40 20% 94%;
+    --muted: 220 6% 16%;
+    --muted-foreground: 40 6% 62%;
+    --accent: 220 100% 58%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 6% 22%;
+    --input: 220 6% 22%;
+    --ring: 220 100% 58%;
+  }
+
+  [dir="rtl"] {
+    --font-heading: "Cairo", ui-sans-serif, system-ui, sans-serif;
+    --font-display: "Cairo", ui-sans-serif, system-ui, sans-serif;
+    --font-body: "Cairo", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: "Cairo", ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 92px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  [dir="rtl"] body {
+    font-size: 16.5px;
+    line-height: 1.9;
+  }
+
+  ::selection {
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 4px;
+  }
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-[1240px] px-5 md:px-10;
+  }
+
+  .micro {
+    @apply font-mono text-[10px] uppercase tracking-[0.24em] text-muted-foreground md:text-[11px];
+  }
+
+  .display {
+    @apply font-display font-bold uppercase leading-[0.92] tracking-[-0.035em];
+  }
+
+  .rule {
+    @apply h-px w-full bg-border;
+  }
+
+  .bp-grid {
+    background-image: linear-gradient(to right, hsl(var(--border) / 0.55) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(var(--border) / 0.55) 1px, transparent 1px);
+    background-size: 88px 88px;
+  }
+
+  .ink-link {
+    @apply relative inline-flex items-center gap-2 font-display text-sm font-medium text-foreground transition-colors;
+  }
+
+  .ink-link::after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    bottom: -3px;
+    height: 1px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: inline-start;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .ink-link:hover {
+    color: hsl(var(--primary));
+  }
+
+  .ink-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .btn-solid {
+    @apply inline-flex items-center justify-center gap-2 bg-primary px-6 py-3.5 font-display text-[13px] font-medium uppercase tracking-[0.12em] text-primary-foreground transition-colors hover:bg-foreground;
+  }
+
+  .btn-line {
+    @apply inline-flex items-center justify-center gap-2 border border-foreground/25 px-6 py-3.5 font-display text-[13px] font-medium uppercase tracking-[0.12em] text-foreground transition-colors hover:border-foreground hover:bg-foreground hover:text-background;
+  }
+
+  .tag {
+    @apply inline-flex items-center border border-foreground/15 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+}

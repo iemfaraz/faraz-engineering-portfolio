@@ -1,3 +1,15 @@
+# Faraz Engineering Portfolio
+
+The independent portfolio and backend are in [`independent/`](./independent/). Start with its [setup and API guide](./independent/README.md).
+
+Deployed private site: https://faraz-independent-portfolio.sassydot.chatgpt.site
+
+The repository root retains the original Base44 export for reference. It requires Base44; the independent version uses Sites, D1 and R2 and does not need a Base44 account.
+
+---
+
+## Original Base44 export instructions
+
 # Base44 App — TanStack Start
 
 A full-stack Base44 app: [TanStack Start](https://tanstack.com/start) (React 19, plain JavaScript) with file-based routes, server functions and server routes, server-rendered and hosted by Base44.

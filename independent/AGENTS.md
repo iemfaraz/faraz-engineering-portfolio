@@ -1,0 +1,3 @@
+# Independent portfolio
+
+This directory is a standalone Sites/Vinext project, not the parent Base44 application. Follow its README. Backend handlers are JavaScript in backend/; use D1 and R2 bindings declared in .openai/hosting.json. Keep Sites authentication and enforce owner authorization on every mutation. Preserve the tracked Site project ID. Do not use the parent Base44 SDK, platform headers, build plugins or deployment instructions here. Never commit secrets, node_modules, build output or local runtime state. Run node --test tests/backend.test.js and the Sites build before publishing changes.
