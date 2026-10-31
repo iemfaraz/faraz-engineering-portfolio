@@ -32,6 +32,14 @@ test('GitHub saves batch atomically, never force refs, and disconnect clears acc
  const trees=calls.filter(c=>c.options.method==='POST'&&c.url.endsWith('/git/trees'));assert.equal(trees.length,1);
  const entries=JSON.parse(trees[0].options.body).tree;assert.equal(JSON.parse(entries[0].content).records.length,snapshot.records.length+2);
  const patch=calls.find(c=>c.options.method==='PATCH');assert.equal(JSON.parse(patch.options.body).force,false);
+ const access=await store.createRecommendationReviewAccess();
+ const proofTree=JSON.parse(calls.filter(c=>c.url.endsWith('/git/trees')).at(-1).options.body).tree[0];
+ assert.ok(proofTree.path.startsWith('.recommendation-access/'));
+ const proof=JSON.parse(proofTree.content);const secret=access.split('.')[1];
+ assert.equal(proof.secret_hash,Buffer.from(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(secret))).toString('hex'));
+ assert.equal(proof.expires_at-proof.created_at,600000);assert.ok(!proofTree.content.includes(secret));assert.ok(!proofTree.content.includes('test-only-token'));
+ const beforeCached=calls.length;assert.equal(await store.createRecommendationReviewAccess(),access);assert.equal(calls.length,beforeCached);
+
  store.disconnectGithub();assert.equal(store.githubSession().connected,false);const before=calls.length;await assert.rejects(store.refreshGithub().then(()=>store.portfolioApi.entities.Project.delete('missing')));assert.equal(calls.length,before);
  globalThis.fetch=async(url)=>({status:url.endsWith('/git/blobs')?403:200,ok:!url.endsWith('/git/blobs'),headers:{get:()=>null},json:async()=>url.endsWith('/git/blobs')?{message:'Resource not accessible by personal access token'}:url.endsWith('/user')?{login:'test-user'}:url.endsWith('/git/ref/heads/main')?{object:{sha:'head'}}:url.endsWith('/git/commits/head')?{tree:{sha:'tree'}}:url.includes('/contents/')?{encoding:'base64',content:Buffer.from(JSON.stringify(snapshot)).toString('base64')}:{permissions:{push:true}}});
  await assert.rejects(store.connectGithub('read-only-token'),/Resource owner = iemfaraz/);assert.equal(store.githubSession().connected,false);

@@ -8,7 +8,13 @@ const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Vary':'Origin'}});
 const fail=(message,status=400)=>{throw Object.assign(new Error(message),{status});};
 async function read(request){if(!request.headers.get('content-type')?.startsWith('application/json'))fail('Expected JSON.',415);const reader=request.body?.getReader();let text='',length=0;const decoder=new TextDecoder();if(!reader)fail('Missing request.');for(;;){const {done,value}=await reader.read();if(done)break;length+=value.length;if(length>12000){await reader.cancel();fail('Request is too large.',413);}text+=decoder.decode(value,{stream:true});}try{return JSON.parse(text+decoder.decode());}catch{fail('Invalid JSON.');}}
-export async function githubJson(path){const response=await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?ref=main`,{headers:{Accept:'application/vnd.github+json','User-Agent':'Faraz-Portfolio-Review'},cache:'no-store'});if(!response.ok)fail(response.status===404?'Review access was not found. Reconnect GitHub and refresh the inbox.':'GitHub verification is temporarily unavailable. Please retry.',response.status===404?401:503);const file=await response.json();if(file.encoding!=='base64'||typeof file.content!=='string')fail('GitHub verification failed.',503);try{return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(file.content.replace(/\s/g,'')),x=>x.charCodeAt(0))));}catch{fail('GitHub verification failed.',503);}}
+export async function githubJson(path){
+ // Public branch files need no API token. The raw endpoint avoids the shared
+ // unauthenticated REST quota; a fresh query prevents stale moderation checks.
+ const response=await fetch(`https://raw.githubusercontent.com/${REPO}/main/${path}?review_check=${Date.now()}`,{headers:{Accept:'application/json','User-Agent':'Faraz-Portfolio-Review','Cache-Control':'no-cache'},cache:'no-store'});
+ if(!response.ok)fail(response.status===404?'Review access was not found. Reconnect GitHub and refresh the inbox.':`GitHub verification is temporarily unavailable (HTTP ${response.status}). Please retry.`,response.status===404?401:503);
+ try{return await response.json();}catch{fail('GitHub verification failed.',503);}
+}
 export async function authorizeReview(request){
  const match=/^Bearer (\d{13}-[a-f0-9-]{36})\.([a-f0-9]{64})$/.exec(request.headers.get('authorization')||'');if(!match||!uuid.test(match[1].slice(14)))fail('Connect GitHub to review private recommendations.',401);
  const proof=await githubJson('.recommendation-access/'+match[1]+'.json');const now=Date.now();
