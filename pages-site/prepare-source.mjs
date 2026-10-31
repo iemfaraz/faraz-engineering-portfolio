@@ -1,4 +1,4 @@
-import {cpSync,existsSync,mkdirSync,copyFileSync,writeFileSync} from 'node:fs';
+import {cpSync,rmSync,existsSync,mkdirSync,copyFileSync,writeFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 const source=fileURLToPath(new URL('../independent/',import.meta.url));
 const target=fileURLToPath(new URL('./reference/',import.meta.url));
@@ -13,6 +13,7 @@ writeFileSync(target+'/public/admin/index.html','<!doctype html><html lang="en">
 
 const repoRoot=fileURLToPath(new URL('../',import.meta.url));
 if(existsSync(repoRoot+'portfolio-data.json'))copyFileSync(repoRoot+'portfolio-data.json',target+'/public/portfolio-data.json');
+rmSync(target+'/public/uploads',{recursive:true,force:true});
 if(existsSync(repoRoot+'uploads'))cpSync(repoRoot+'uploads',target+'/public/uploads',{recursive:true});
 
 // Rewrite bundled fallback assets for repository subpath hosting.

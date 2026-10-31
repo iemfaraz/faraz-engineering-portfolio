@@ -1,0 +1,4 @@
+argostranslate==1.11.0
+torch==2.9.1
+PyMuPDF==1.26.7
+weasyprint==68.0

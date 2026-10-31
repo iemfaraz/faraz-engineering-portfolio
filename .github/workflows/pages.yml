@@ -2,10 +2,10 @@ name: Publish portfolio to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ['pages-site/**', 'independent/**', '.github/workflows/pages.yml', 'portfolio-data.json', 'uploads/**']
+    paths: ['pages-site/**', 'independent/**', '.github/workflows/pages.yml', 'portfolio-data.json', 'uploads/**', 'translation-state.json']
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -13,18 +13,59 @@ concurrency:
   cancel-in-progress: true
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: pages-site/translation-requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/argos-translate
+            ~/.cache/argos-translate
+            ~/.cache/minisbd
+          key: english-arabic-argos-1.11.0-v1
+      - name: Check translation logic
+        run: python -m unittest discover -s pages-site/tests -p 'test_translation.py'
+      - name: Install translation and PDF tools
+        run: |
+          python -m pip install torch==2.9.1 --index-url https://download.pytorch.org/whl/cpu
+          python -m pip install -r pages-site/translation-requirements.txt
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-core tesseract-ocr-eng
+      - name: Automatically update Arabic text and CV
+        env:
+          ARGOS_DEVICE_TYPE: cpu
+        run: python pages-site/translate_portfolio.py
+      - name: Save translated content to GitHub
+        run: |
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" || { echo 'Newer content exists. Its workflow will publish it.'; exit 1; }
+          git add portfolio-data.json uploads
+          if [ -f translation-state.json ]; then git add translation-state.json; fi
+          if ! git diff --cached --quiet; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Automatically update Arabic portfolio and CV'
+            git push origin HEAD:main
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: npm
           cache-dependency-path: pages-site/package-lock.json
       - run: npm ci
+        working-directory: pages-site
+      - run: node prepare-source.mjs && npm test
         working-directory: pages-site
       - run: npm run build
         working-directory: pages-site

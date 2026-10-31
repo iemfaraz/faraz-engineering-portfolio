@@ -25,6 +25,7 @@ export async function connectGithub(token){
  try{const [user,repository]=await Promise.all([api('/user'),repo('')]);if(!repository.permissions?.push)throw Error('This GitHub account does not have write access to the portfolio repository.');const value=await latest();account=user.login;emit(value.snapshot);window.dispatchEvent(new Event('portfolio:auth'));return account;}catch(e){disconnectGithub();throw e;}
 }
 export async function refreshGithub(){if(!accessToken)return;const value=await latest();emit(value.snapshot);return value.snapshot;}
+export function requestTranslation(){return enqueue({type:'translate'});}
 async function runBatch(batch){
  try{
   const current=await latest();const operations=batch.map(b=>b.operation);const next=applyOperations(current.snapshot,operations);const entries=[];const used=[];

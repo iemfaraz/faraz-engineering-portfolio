@@ -13,6 +13,7 @@ export function recordData(record){const {id,entity,created_date,...data}=record
 export function applyOperations(snapshot,operations){
  const next=structuredClone(snapshot);
  for(const op of operations){
+  if(op.type==='translate'){next.translation={...next.translation,status:'queued',requested_at:new Date().toISOString()};continue;}
   if(op.type==='removeFile'){
    const file=next.files.find(f=>f.id===op.id);if(!file)throw Error('File not found.');
    if(next.records.some(r=>r.url===PUBLIC_ORIGIN+file.path||r.url?.endsWith('/'+file.path)))throw Error('This file is still attached. Remove or replace its attachment first.');
@@ -28,6 +29,14 @@ export function applyOperations(snapshot,operations){
   const row={...data,id:op.id,entity:op.kind,created_date:index<0?new Date().toISOString():next.records[index].created_date};
   if(index<0)next.records.push(row);else next.records[index]=row;
  }
+ const changesEnglish=operations.some(op=>{
+  const before=snapshot.records.find(r=>r.id===op.id&&r.entity===op.kind);
+  const after=next.records.find(r=>r.id===op.id&&r.entity===op.kind);
+  if(op.kind==='Project')return ['title_en','summary_en','scope_en'].some(key=>before?.[key]!==after?.[key]);
+  if(op.kind==='TextOverride')return (before?.lang==='en'||after?.lang==='en')&&before?.value!==after?.value;
+  return op.kind==='MediaItem'&&(before?.kind==='cv'||after?.kind==='cv')&&before?.url!==after?.url;
+ });
+ if(changesEnglish)next.translation={...next.translation,status:'queued',requested_at:new Date().toISOString()};
  next.initialized=true;return next;
 }
 export function resolveMediaUrl(url){

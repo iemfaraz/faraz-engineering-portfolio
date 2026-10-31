@@ -7,11 +7,12 @@ import ProjectsManager from '@/components/admin/ProjectsManager';
 import ProjectCoversManager from '@/components/admin/ProjectCoversManager';
 import ProjectVideosManager from '@/components/admin/ProjectVideosManager';
 import DrawingsManager from '@/components/admin/DrawingsManager';
-import CvManager from '@/components/admin/CvManager';
+import CvManager from './GithubCvManager';
+import GithubTranslation from './GithubTranslation';
 import SectionEditor from '@/components/admin/SectionEditor';
 import GithubFiles from './GithubFiles';
 import GithubRecommendations from './GithubRecommendations';
-const TABS=[['intro','Intro video',VideoManager],['projects','Projects',ProjectsManager],['covers','Project covers',ProjectCoversManager],['videos','Project videos',ProjectVideosManager],['drawings','Drawings',DrawingsManager],['cv','CV & profile photo',CvManager],['sections','Section details',SectionEditor],['files','Project files',GithubFiles],['recommendations','Recommendations',GithubRecommendations]];
+const TABS=[['intro','Intro video',VideoManager],['projects','Projects',ProjectsManager],['covers','Project covers',ProjectCoversManager],['videos','Project videos',ProjectVideosManager],['drawings','Drawings',DrawingsManager],['cv','CV & profile photo',CvManager],['sections','Section details',SectionEditor],['translation','AI translation',GithubTranslation],['files','Project files',GithubFiles],['recommendations','Recommendations',GithubRecommendations]];
 export default function GithubDashboard(){
  const [session,setSession]=useState(githubSession()),[token,setToken]=useState(''),[busy,setBusy]=useState(false),[error,setError]=useState(''),[tab,setTab]=useState('intro'),[commit,setCommit]=useState('');
  useEffect(()=>{const auth=()=>setSession(githubSession());const published=e=>setCommit(e.detail.sha);window.addEventListener('portfolio:auth',auth);window.addEventListener('portfolio:published',published);return()=>{window.removeEventListener('portfolio:auth',auth);window.removeEventListener('portfolio:published',published);};},[]);
