@@ -32,7 +32,7 @@ export default function Nav() {
         </nav>
 
         <div className="flex flex-none items-center gap-2">
-          <a href="#/admin" className="border border-foreground/25 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground hover:border-foreground">Dashboard</a>
+          <a href="#/admin" className="border border-foreground/25 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground hover:border-foreground">{lang === 'ar' ? 'لوحة التحكم' : 'Dashboard'}</a>
           <ThemeToggle />
           <button
             type="button"
