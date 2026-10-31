@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import {fileURLToPath} from 'node:url';
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
-const root=fileURLToPath(new URL('../independent/',import.meta.url));
+const root=fileURLToPath(new URL('./reference/',import.meta.url));
 const local=name=>fileURLToPath(new URL('./src/'+name,import.meta.url));
 const base='/faraz-engineering-portfolio/';
 export default defineConfig({base,server:{allowedHosts:['terminal.local']},publicDir:root+'public',plugins:[

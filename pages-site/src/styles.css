@@ -1,6 +1,6 @@
 @import "tailwindcss" source(none);
-@config "../../independent/tailwind.config.js";
-@source "../../independent/components";
+@config "../reference/tailwind.config.js";
+@source "../reference/components";
 @source "./";
 
 @layer base {

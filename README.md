@@ -1,3 +1,9 @@
+# Public portfolio
+
+The public GitHub Pages build is in [`pages-site/`](./pages-site/). Its workflow builds and publishes the static portfolio after pushes to main once repository Pages is enabled for GitHub Actions.
+
+Public site address: https://iemfaraz.github.io/faraz-engineering-portfolio/
+
 # Faraz Engineering Portfolio
 
 The independent portfolio and backend are in [`independent/`](./independent/). Start with its [setup and API guide](./independent/README.md).
