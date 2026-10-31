@@ -459,6 +459,149 @@
     "cv_source_url": "https://iemfaraz.github.io/faraz-engineering-portfolio/assets/Faraz_Nawaz_CV.pdf",
     "cv_media_id": "ba0bf72e-b5c4-5fda-ac69-0073caec951e",
     "cv_version_id": "0f1dbe61-6c50-5739-a346-fcfa06e1daac",
-    "updated_at": "2026-10-31T19:18:08.736160+00:00"
+    "updated_at": "2026-10-31T19:41:15.295494+00:00"
+  },
+  "localization": {
+    "ar": {
+      "projects": {
+        "reference-commercial-court": {
+          "tags": "الطاقة, الإضاءة, ELV, SBC",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "LV توزيع القوى الكهربائية, تصميم الإنارة, ELV النظم",
+          "standards": "SBC, IEC"
+        },
+        "reference-rega": {
+          "tags": "الطاقة, الإضاءة, ELV, SBC",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "LV توزيع القوى الكهربائية, تصميم الإنارة, ELV النظم",
+          "standards": "SBC, IEC"
+        },
+        "reference-jasmin-residential": {
+          "tags": "الطاقة, الإضاءة, ELV",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "LV الطاقة, تصميم الإنارة, ELV النظم",
+          "standards": "SBC"
+        },
+        "reference-junoub-villa": {
+          "tags": "الإضاءة, حلقات نقاش",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "Villa Electric design, حسابات الإضاءة, جداول اللوحات",
+          "standards": "SBC"
+        },
+        "reference-al-yarmouk": {
+          "tags": "الطاقة, التنسيق",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "LV الطاقة, التنسيق",
+          "standards": "SBC"
+        },
+        "reference-starlink-warehouse": {
+          "tags": "الطاقة, الإضاءة",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "توزيع القوى الكهربائية, اضاءة المستودع",
+          "standards": "SBC, IEC"
+        },
+        "reference-fenchurch-network": {
+          "tags": "ELV, الشبكة",
+          "engagement": "بصمة الريادة للاستشارات الهندسية, الرياض",
+          "office": "مكتب التصميم",
+          "period": "2025 — 2026",
+          "disciplines": "الهياكل الأساسية للشبكات, ELV routing",
+          "standards": "IEC"
+        },
+        "reference-south-dhahran": {
+          "tags": "LV الطاقة, إنذار الحريق, WIR",
+          "engagement": "شركة فوزي صالح النجراني, الخبر",
+          "office": "تنفيذ الأعمال بالموقع",
+          "period": "أغسطس 2024 — يوليو 2025",
+          "disciplines": "LV مفاتيح الطاقة, دوائر الفرع, الإضاءة المعمارية, إنذار الحريق",
+          "standards": "SBC, IEC"
+        },
+        "reference-al-qaa-housing": {
+          "tags": "الكابلات الهيكلية, CCTV, التحكم بالدخول",
+          "engagement": "شركة صالح زهير الشمراني القابضة, الخبر",
+          "office": "تنفيذ الأعمال بالموقع",
+          "period": "أغسطس 2023 — يوليو 2024",
+          "disciplines": "الكابلات الهيكلية, شبكات البيانات, CCTV, القياس الأحيائي التحكم بالدخول",
+          "standards": "IEC"
+        },
+        "reference-padel-hall-lighting": {
+          "tags": "DIALux evo, lux, الاضواء الرياضية",
+          "engagement": "تصميم الإنارة اللجنة",
+          "office": "دراسة التصميم",
+          "period": "2026",
+          "disciplines": "المحاكاة الضوئية, مخطط لومينير, حزمة عرض",
+          "standards": "IEC"
+        }
+      },
+      "media": {
+        "da5203f2-14e0-49be-9bbc-54d0f47b2ab3": {
+          "title": "المحكمة التجارية المشروع",
+          "note": ""
+        },
+        "reference-intro": {
+          "title": "الفيديو التعريفي",
+          "note": ""
+        },
+        "4f4894d1-4384-492a-883f-9085d6b48523": {
+          "title": "الهيئة العامة للعقار (rega)",
+          "note": ""
+        },
+        "3efd4ed1-a022-420c-90bd-00e06ce89bbe": {
+          "title": "Jasmin residential project",
+          "note": ""
+        },
+        "be66b872-3e47-4390-aa11-8a58f2c9fdaa": {
+          "title": "junoub villa",
+          "note": ""
+        },
+        "25e1107d-0bc9-4c0a-8f89-5a5b9d10c4e8": {
+          "title": "مشروع إقامة اليرموك",
+          "note": ""
+        },
+        "6802e29e-04fe-4d54-b6fb-0b09568d50e1": {
+          "title": "مشروع مستودع ستارلينك",
+          "note": ""
+        },
+        "8afd1b22-e06e-4e3c-ad07-ebae55a1fd47": {
+          "title": "شبكة فينشورتش",
+          "note": ""
+        },
+        "ddbd0ea8-749b-42b6-9fc5-4eda25823882": {
+          "title": "South dhahran home ownership project",
+          "note": ""
+        },
+        "41a0bcfb-faeb-48fc-bff5-9d9333a0a6d3": {
+          "title": "Al-qaa housing project, qunfudhah",
+          "note": ""
+        },
+        "b182eef3-11ab-45d7-9df6-9b75aaf26144": {
+          "title": "قاعة الطعام تصميم الإنارة",
+          "note": ""
+        },
+        "7f9efdd3-b43c-4547-9b17-b20147d58cfb": {
+          "title": "قاعة الطعام تصميم الإنارة",
+          "note": ""
+        }
+      },
+      "recommendations": {},
+      "dictionary": [
+        {
+          "path": "experience.jobs.0.project",
+          "value": ""
+        }
+      ]
+    }
   }
 }
