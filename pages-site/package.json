@@ -1,0 +1,6 @@
+{
+ "name":"faraz-public-portfolio", "version":"1.0.0", "private":true,"type":"module",
+ "scripts":{"dev":"vite --host 0.0.0.0","build":"vite build","preview":"vite preview --host 0.0.0.0"},
+ "dependencies":{"react":"19.2.6","react-dom":"19.2.6","lucide-react":"1.31.0","clsx":"2.1.1","tailwind-merge":"3.6.0"},
+ "devDependencies":{"vite":"8.0.13","@vitejs/plugin-react":"6.0.2","tailwindcss":"4.2.1","@tailwindcss/postcss":"4.2.1"}
+}
