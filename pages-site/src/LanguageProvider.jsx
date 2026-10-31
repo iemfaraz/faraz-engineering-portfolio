@@ -16,7 +16,7 @@ const LangContext = createContext({
 
 export function LanguageProvider({ children }) {
   const [lang, setLang] = useState("en");
-  const {snapshot}=useLiveContent();
+  const {snapshot,refresh}=useLiveContent();
   const overrides=useMemo(()=>(snapshot?.records||[]).filter(r=>r.entity==="TextOverride"),[snapshot]);
 
   const refreshContent = useCallback(async () => {}, []);
@@ -44,13 +44,13 @@ export function LanguageProvider({ children }) {
     const forLang = overrides.filter((row) => row.lang === lang);
     return {
       lang,
-      setLang,
+      setLang: next=>{setLang(next);if(!window.location.hash.startsWith('#/admin'))refresh().catch(()=>{});},
       isRtl: lang === "ar",
       overrides,
       refreshContent,
       c: mergeOverrides(lang === "ar" ? dictionaryWithFallback(DICTIONARIES.en,DICTIONARIES.ar) : DICTIONARIES.en, [...(lang==='ar'?snapshot?.localization?.ar?.dictionary||[]:[]),...forLang]),
     };
-  }, [lang, overrides, refreshContent,snapshot]);
+  }, [lang, overrides, refreshContent,snapshot,refresh]);
 
   return <LangContext.Provider value={value}>{children}</LangContext.Provider>;
 }
