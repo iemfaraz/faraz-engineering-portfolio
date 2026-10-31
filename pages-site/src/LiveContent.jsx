@@ -1,15 +1,14 @@
-import {createContext,useContext,useEffect,useState} from 'react';
-export const BACKEND='https://faraz-independent-portfolio.sassydot.chatgpt.site';
-const Context=createContext({snapshot:null});
-function mediaUrl(value){if(typeof value==='string'&&(value.startsWith('/api/files/')||value.startsWith('/assets/')))return BACKEND+value;return value;}
+import {createContext,useContext,useEffect,useState,useCallback} from 'react';
+import {displaySnapshot,validateSnapshot} from './github/model';
+const Context=createContext({snapshot:null,refresh:async()=>{}});
 export function LiveContentProvider({children}){
  const [snapshot,setSnapshot]=useState(null);
- useEffect(()=>{const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),8000);
- fetch(BACKEND+'/api/portfolio',{mode:'cors',credentials:'omit',cache:'no-store',signal:controller.signal}).then(async response=>{
-  if(!response.ok)throw Error('Content unavailable');const data=await response.json();if(!Array.isArray(data.records))throw Error('Invalid content');
-  setSnapshot({...data,records:data.records.map(row=>({...row,...(row.url?{url:mediaUrl(row.url)}:{})}))});
- }).catch(()=>{/* Bundled portfolio remains available if live content is unavailable. */}).finally(()=>clearTimeout(timer));
- return()=>{clearTimeout(timer);controller.abort();};},[]);
- return <Context.Provider value={{snapshot}}>{children}</Context.Provider>;
+ const refresh=useCallback(async()=>{
+  const response=await fetch(import.meta.env.BASE_URL+'portfolio-data.json',{credentials:'omit',cache:'no-store'});
+  if(!response.ok)throw Error('Portfolio data could not be loaded.');
+  const data=validateSnapshot(await response.json());setSnapshot(displaySnapshot(data));return data;
+ },[]);
+ useEffect(()=>{refresh().catch(()=>{});const update=e=>setSnapshot(e.detail);window.addEventListener('portfolio:updated',update);return()=>window.removeEventListener('portfolio:updated',update);},[refresh]);
+ return <Context.Provider value={{snapshot,refresh}}>{children}</Context.Provider>;
 }
 export const useLiveContent=()=>useContext(Context);

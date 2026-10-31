@@ -14,10 +14,11 @@ export default defineConfig({base,server:{allowedHosts:['terminal.local']},publi
  {find:'@/components/portfolio/ProjectsProvider',replacement:local('ProjectsProvider.jsx')},
  {find:'@/components/portfolio/Nav',replacement:local('Nav.jsx')},
  {find:'@/components/portfolio/RecommendationForm',replacement:local('RecommendationForm.jsx')},
+ {find:'@/lib/portfolio-api',replacement:local('github-store.js')},
  {find:'@/lib/AuthContext',replacement:local('AuthContext.js')},
  {find:'@/lib/router-compat',replacement:local('router.jsx')},
  {find:'@',replacement:root},
  {find:'lucide-react',replacement:require.resolve('lucide-react').replace('dist/cjs/lucide-react.js','dist/esm/lucide-react.mjs')},
- ...['clsx','tailwind-merge'].map(name=>({find:name,replacement:fileURLToPath(import.meta.resolve(name))})),
+ ...['clsx','tailwind-merge','sonner','zod'].map(name=>({find:name,replacement:fileURLToPath(import.meta.resolve(name))})),
  ]},
 });

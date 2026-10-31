@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
 import {LiveContentProvider,useLiveContent} from './LiveContent';
 import CvPage from './CvText';
-import AdminPortal from './AdminPortal';
+import AdminPortal from './GithubDashboard';
 import './styles.css';
 import {ThemeProvider} from '@/components/portfolio/ThemeProvider';
 import {LanguageProvider} from './LanguageProvider';
