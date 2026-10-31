@@ -19,6 +19,7 @@ from urllib.parse import unquote, urlparse
 ORIGIN = 'https://iemfaraz.github.io/faraz-engineering-portfolio/'
 ENGINE = 'Argos Translate en-ar (local neural model)'
 VERSION = 1
+CV_TRANSLATION_REVISION = 2
 GLOSSARY = {
     'Faraz Nawaz': 'فراز نواز', 'Electrical Engineer': 'مهندس كهربائي',
     'Electrical Engineering': 'الهندسة الكهربائية', 'Technical Office': 'المكتب الفني',
@@ -116,10 +117,10 @@ def translated(text, engine):
         return text
     # Do not send identifiers through the model; preserve email, URLs, numbers,
     # engineering acronyms and standards byte-for-byte in translated prose.
-    acronyms = 'QA/QC SBC IEC NEC NFPA SEC SASO ASTM ISO IEEE EN BS UL LV MV HV ELV MEP BIM SLD BOQ RFI WIR MIR ITP NCR CCTV UPS DG HVAC BMS ICT PLC SCADA AutoCAD Revit DIALux Navisworks'.split()
+    acronyms = 'QA/QC SBC IEC NEC NFPA SEC SASO ASTM ISO IEEE EN BS UL LV MV HV ELV MEP BIM SLD BOQ RFI WIR MIR ITP NCR CCTV UPS DG HVAC BMS ICT PLC SCADA PEC HSE GCC AutoCAD Revit DIALux Navisworks'.split()
     glossary = {key.lower(): value for key, value in GLOSSARY.items()}
     phrases = '|'.join(re.escape(key) for key in sorted(GLOSSARY, key=len, reverse=True))
-    pattern = r'https?://\S+|[\w.+-]+@[\w.-]+\.[a-zA-Z]{2,}|\+?\d[\d ./–-]*\d|\b(?:' + phrases + r')\b|\b(?:' + '|'.join(map(re.escape, acronyms)) + r')(?:\s+\d[\d./-]*)?\b'
+    pattern = r'https?://\S+|[\w.+-]+@[\w.-]+\.[a-zA-Z]{2,}|\+?\d[\d ./–-]*\d|\b[A-Za-z][A-Za-z/_.-]*\d[A-Za-z0-9/_.-]*\b|(?<!\w)(?:' + phrases + r')(?!\w)|\b(?:' + '|'.join(map(re.escape, acronyms)) + r')(?:\s+\d[\d./-]*)?\b'
     tokens = re.split('(' + pattern + ')', text, flags=re.IGNORECASE)
     result = []
     for index, part in enumerate(tokens):
@@ -264,7 +265,7 @@ def translate_snapshot(snapshot, state, root, engine, extract=extract_cv, render
             del old[key]
 
     source, path, url = cv_source(result, root)
-    source_hash = digest(path.read_bytes())
+    source_hash = digest([digest(path.read_bytes()), CV_TRANSLATION_REVISION])
     prior_cv = state.get('cv', {})
     current_arabic = next((r for r in records if r['id'] == prior_cv.get('media_id')), None)
     has_arabic_file = current_arabic and any(f['path'] == current_arabic['url'].removeprefix(ORIGIN) and (root / f['path']).is_file() for f in result['files'])

@@ -78,6 +78,13 @@ class TranslationTests(unittest.TestCase):
             self.assertIn(token, translated)
             self.assertFalse(any(token in call for call in self.calls))
 
+    def test_employer_names_and_registration_ids_are_not_mistranslated(self):
+        text = 'Saleh Zuhair Al-Shamrani Holding Co., Khobar. PEC ELECT/I05194'
+        value = module.translated(text, self.engine)
+        self.assertIn('شركة صالح زهير الشمراني القابضة', value)
+        self.assertIn('PEC', value)
+        self.assertIn('ELECT/I05194', value)
+
     def test_reject_external_cv_and_traversal(self):
         for url in ['https://example.com/cv.pdf', module.ORIGIN + 'uploads/../cv.pdf']:
             snapshot = copy.deepcopy(self.snapshot)
