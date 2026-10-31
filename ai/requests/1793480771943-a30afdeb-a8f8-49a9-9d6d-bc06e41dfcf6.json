@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "id": "1793480771943-a30afdeb-a8f8-49a9-9d6d-bc06e41dfcf6",
+  "prompt": "Change the accent colour to gold and make the hero heading compact.",
+  "context": {
+    "scope": "appearance",
+    "label": "Appearance",
+    "entries": [
+      {
+        "id": "site",
+        "field": "accent",
+        "value": "blue"
+      },
+      {
+        "id": "site",
+        "field": "hero_size",
+        "value": "standard"
+      }
+    ]
+  },
+  "created_at": "2026-10-31T21:06:11.943Z",
+  "created_by": "iemfaraz"
+}
