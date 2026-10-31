@@ -1,0 +1,41 @@
+{
+  "sources": {
+    "project:reference-commercial-court:title": "804bdd83029667f5e3c19d8514b106b1ae4e1a25e4f2dae16496a11d5f8cfbd0",
+    "project:reference-commercial-court:summary": "9fa2cdd740e5dc54c9f6fa3e2e02086d1268a7f1db76ce4b10dbf956039960e5",
+    "project:reference-commercial-court:scope": "6e42d11780a624b09fb796107b412cfd29c6059f723e6dfe19cfaa8359ad5ba8",
+    "project:reference-rega:title": "6ad8d032dd0234dd85e2e6c018376e0c877171d24a7cea6a9736b64f9e81e174",
+    "project:reference-rega:summary": "f1d5136c09cc3e50a186ae9543d164366b89c4a1dd5c38309c2f98cdce02948f",
+    "project:reference-rega:scope": "c961050b45d07e8c71a60e05386c64796fd3a92afc38632b4e14a99cc00e9bb3",
+    "project:reference-jasmin-residential:title": "111fbe959ab9131babd4c5751c7c84bbe9d480fbddffc83d298514684824dfb4",
+    "project:reference-jasmin-residential:summary": "7d0898935f723981c71ee4b5803e06c81759812ca1aa18978b23342703107d33",
+    "project:reference-jasmin-residential:scope": "48d5cdef1f803189aa039976a78377992bc5dcc0ecc79fe17e7c2672767d199c",
+    "project:reference-junoub-villa:title": "a1078f25cc68a2a51ba54f1ff4c44d4a072d6bd7d092a6db743bc682ec187be5",
+    "project:reference-junoub-villa:summary": "f71268501123e6170290eb0a1990f414c68b0728f290e1d4de2fdad4ce1a9ca6",
+    "project:reference-junoub-villa:scope": "ea0430d39449aaca7b45b5756b5b8d2954decc3a067abb64643d67b12193284a",
+    "project:reference-al-yarmouk:title": "da71d44b6cf6c7f9253814f611e46922258c324b769cfc5098aad3b667766d89",
+    "project:reference-al-yarmouk:summary": "2756b701628d1dd02fc1e1cb96ff4f061bc2312d2327ebcc9778f9f2b0b8177b",
+    "project:reference-al-yarmouk:scope": "ac4e30dc390b93b9c7b4a21ad21c6c604ed830ba9bccfbd8ee383936075ced69",
+    "project:reference-starlink-warehouse:title": "65d2a9087eadc0ce3eec73a19d533f3d340cba98aa3a46f7c4d5ac0674e411f9",
+    "project:reference-starlink-warehouse:summary": "5d03559ddcd4dd532577d38707dc384fab10e350062c96ee9de8e92d1cc7c0b0",
+    "project:reference-starlink-warehouse:scope": "3168028d69b42a5da9e93904a8285af3981078f30bf5d1c37023829136b3851d",
+    "project:reference-fenchurch-network:title": "f3e2cdbc6a1659265ba98f54c4da1c6133aafa08b4100902da424bdb712c5d58",
+    "project:reference-fenchurch-network:summary": "7e4d7f0a99b4c48c04197f64e247c18771ed80466a25dc6147eb989d7b1e6302",
+    "project:reference-fenchurch-network:scope": "52f374a4f04927eed3f0b2cde7e59ddb9e55e00378f07e993902d30393c1a3e5",
+    "project:reference-south-dhahran:title": "b6f58e843d107a8c4d2da3dddafeab2d5eb0fded09afe64974ce340b2e6e0abe",
+    "project:reference-south-dhahran:summary": "c4a83258474c6f43c3ad99c9daae781c8d4e818a0de5ccb88ff061521d3f2658",
+    "project:reference-south-dhahran:scope": "0c7f87a60e83097eff2ad2a027b86a7d62d86f9cf937b78ad4dc45b031c13834",
+    "project:reference-al-qaa-housing:title": "ff6b7c36970877f32d1e112089b02ef384897e56f6683101e37fee7082245845",
+    "project:reference-al-qaa-housing:summary": "7cca2b4ffa06236139e26d4a02670ff55fe2dadc874d9557d4fd2f26d026dd49",
+    "project:reference-al-qaa-housing:scope": "aa6a0fd7c0ddc13fd8695ed57ebed9e3a383bf21ece41c05666ebdd19af4622c",
+    "project:reference-padel-hall-lighting:title": "cc914282a0ddea5d61b53848b9b6fbd6e1ea252926cfa6b58becce1deb4adbb9",
+    "project:reference-padel-hall-lighting:summary": "d9149691eadc5b624da9a37d9dd882418e225255ad3fd785051d92e0c6b7e8b5",
+    "project:reference-padel-hall-lighting:scope": "55093616dfb05f421dff12c763b3bbd129bdcdd49856b5ef2bd477febdd1c0f7"
+  },
+  "cv": {
+    "hash": "0a8b08ad99d7534336864ec77c840de52525d51c238c738b63454cd3cfb2a5a4",
+    "source_url": "https://iemfaraz.github.io/faraz-engineering-portfolio/assets/Faraz_Nawaz_CV.pdf",
+    "media_id": "ba0bf72e-b5c4-5fda-ac69-0073caec951e",
+    "version_id": "0f1dbe61-6c50-5739-a346-fcfa06e1daac"
+  },
+  "version": 1
+}
