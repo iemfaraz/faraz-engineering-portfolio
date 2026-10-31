@@ -627,11 +627,13 @@
     "default:detail.scope": "f1d7b653b43702183a8df2882c9f59a3805d2b6a7964c3967d4e57e133c29394",
     "default:detail.film": "19a5f6ef6414326338a452ba88daca93e8617a8369c3ec90dd7eb3a396a0cd52",
     "default:detail.ctaTitle": "8c98a484977a26f905088e0ff02274f24a52a0a7c95b5f508f4eda8fc70036cc",
-    "default:detail.ctaBody": "badf91a6e0632146421d7d645a4c8684504915e2321efa7dcf36483c50b4c638"
+    "default:detail.ctaBody": "badf91a6e0632146421d7d645a4c8684504915e2321efa7dcf36483c50b4c638",
+    "display:MediaItem:b232fe9a-a22c-4906-95f0-52f0328ec87b:title": "647bbedcdaf592291b56cdd5cf3106018896b2d985bb70ef5790ebecab103788",
+    "display:MediaItem:b232fe9a-a22c-4906-95f0-52f0328ec87b:note": "12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126"
   },
   "cv": {
-    "hash": "a4f367e65401a51eb2225539a341c7d423b8f398b1e90695b7702dbe96900b7e",
-    "source_url": "https://iemfaraz.github.io/faraz-engineering-portfolio/assets/Faraz_Nawaz_CV.pdf",
+    "hash": "095d9eb3551cd342b8d7bfad58f918bec60fb8bbc404cf67d66b5e3d775e4802",
+    "source_url": "https://iemfaraz.github.io/faraz-engineering-portfolio/uploads/3debd3d8-8255-4856-be23-5a0c35d52361.pdf",
     "media_id": "ba0bf72e-b5c4-5fda-ac69-0073caec951e",
     "version_id": "0f1dbe61-6c50-5739-a346-fcfa06e1daac"
   },
